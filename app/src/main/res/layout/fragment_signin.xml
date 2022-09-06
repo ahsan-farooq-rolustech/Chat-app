@@ -8,7 +8,7 @@
     android:overScrollMode="never"
     android:padding="@dimen/_24sdp"
     android:scrollbars="none"
-    tools:context=".view.authentication.SigninActivity">
+    tools:context=".view.authentication.SignInFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/etinputEmail"
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
             android:layout_marginTop="@dimen/_40sdp"
@@ -51,7 +51,7 @@
             android:textSize="@dimen/_13ssp" />
 
         <EditText
-            android:id="@+id/etinputPasword"
+            android:id="@+id/etPasword"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
             android:layout_marginTop="@dimen/_16sdp"
@@ -67,7 +67,7 @@
             android:textSize="@dimen/_13ssp" />
 
         <EditText
-            android:id="@+id/etinputConfirmPasword"
+            android:id="@+id/etConfirmPasword"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
             android:layout_marginTop="@dimen/_16sdp"
@@ -104,12 +104,15 @@
         <!--            android:textStyle="bold"/>-->
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cvSignin"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_50sdp"
             android:layout_marginTop="@dimen/_20sdp"
-            app:cardCornerRadius="@dimen/_8sdp">
+            app:cardCornerRadius="@dimen/_8sdp"
+            android:clickable="true">
 
             <RelativeLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/background_primary_color_round">
@@ -124,6 +127,7 @@
                     android:textStyle="bold"/>
 
                 <ProgressBar
+                    android:id="@+id/pbLoader"
                     android:layout_width="@dimen/_25sdp"
                     android:layout_height="@dimen/_25sdp"
                     android:layout_centerVertical="true"
