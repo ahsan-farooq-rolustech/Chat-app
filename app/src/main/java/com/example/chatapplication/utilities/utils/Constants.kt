@@ -2,8 +2,9 @@ package com.example.chatapplication.utilities.utils
 
 object FBConstants
 {
-    const val COL_EMAIL="email"
-    const val TABLE_USERS="users"
+    const val KEY_EMAIL="email"
+    const val COLLECTION_USERS="users"
+    const val KEY_FCM_TOKEN="fcmToken"
     const val LOGIN = 1
     const val REGISTER = 2
 
@@ -23,4 +24,12 @@ object ValidationConstants
     const val PASSWORD_DONOT_MATCH=-1
     const val PASSWORD_LEN_ERROR=-2
     const val PASSWORK_OKAY=0
+}
+
+object AppConstants
+{
+    const val USER_EXISTANCE_UNKNOWN=99
+    const val USER_EXISTS=999
+    const val USER_DOESNOT_EXISTS=9999
+
 }

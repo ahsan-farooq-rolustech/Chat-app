@@ -7,5 +7,8 @@ interface IFBAuthListener {
     fun onLoginError(error:String){}
     fun onUserExists(){}
     fun onUserDoesNotExists(){}
+    fun onFirestoreError(error:String){}
+    fun onUserInsertedSuccessfully(){}
+
 }
 
