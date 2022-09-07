@@ -16,9 +16,9 @@
     </fragment>
     <fragment
         android:id="@+id/ChatFragment"
-        android:name="com.example.chatapplication.view.chat.ChatFragment"
+        android:name="com.example.chatapplication.view.chat.ChatOfUsersFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" >
+        tools:layout="@layout/fragment_chat_of_users" >
         <action
             android:id="@+id/action_ChatFragment_to_usersFragment"
             app:destination="@id/usersFragment" />
