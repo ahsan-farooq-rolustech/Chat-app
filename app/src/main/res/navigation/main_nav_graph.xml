@@ -12,11 +12,20 @@
         tools:layout="@layout/fragment_signin" >
         <action
             android:id="@+id/action_signinFragmentFragment_to_showAllChatFragment"
-            app:destination="@id/showAllChatFragment" />
+            app:destination="@id/ChatFragment" />
     </fragment>
     <fragment
-        android:id="@+id/showAllChatFragment"
+        android:id="@+id/ChatFragment"
         android:name="com.example.chatapplication.view.chat.ShowAllChatFragment"
-        android:label="fragment_show_all_chat"
-        tools:layout="@layout/fragment_show_all_chat" />
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_ChatFragment_to_usersFragment"
+            app:destination="@id/usersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.example.chatapplication.view.chat.UsersFragment"
+        android:label="fragment_users"
+        tools:layout="@layout/fragment_users" />
 </navigation>

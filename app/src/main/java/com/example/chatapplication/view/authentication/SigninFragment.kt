@@ -21,7 +21,7 @@ import com.example.chatapplication.viewmodel.viewModelFactory.AuthViewModelFacto
 import java.io.ByteArrayOutputStream
 
 
-class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener
+class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener,IFirestoreListinner
 {
     private lateinit var binding: FragmentSigninBinding
     private lateinit var authHelper: FBAuthHelper

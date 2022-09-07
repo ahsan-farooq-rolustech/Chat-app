@@ -1,15 +1,16 @@
 package com.example.chatapplication.utilities.helperClasses
 
 import com.example.chatapplication.ChatApplication
+import com.example.chatapplication.data.model.User
 import com.example.chatapplication.utilities.utils.FBConstants
-import com.example.chatapplication.utilities.utils.IFBAuthListener
+import com.example.chatapplication.utilities.utils.IFirestoreListinner
 
 class FBStoreHelper
 {
 
-    private lateinit var mListener: IFBAuthListener
+    private lateinit var mListener: IFirestoreListinner
 
-    fun setListener(listener: IFBAuthListener)
+    fun setListener(listener: IFirestoreListinner)
     {
         mListener = listener
     }
@@ -48,10 +49,42 @@ class FBStoreHelper
         }
     }
 
-    fun updateToken(token:String)
+    fun updateToken(token: String)
     {
-        ChatApplication.firestore.collection(FBConstants.COLLECTION_USERS).document(ChatApplication.fbAuth.currentUser?.email.toString())
-            .update(FBConstants.KEY_FCM_TOKEN,token)
+        ChatApplication.firestore.collection(FBConstants.COLLECTION_USERS).document(ChatApplication.fbAuth.currentUser?.email.toString()).update(FBConstants.KEY_FCM_TOKEN, token)
+    }
+
+    fun getUsers()
+    {
+        val userEmail=ChatApplication.fbAuth.currentUser?.email
+        ChatApplication.firestore.collection(FBConstants.COLLECTION_USERS).get().addOnCompleteListener { task ->
+            if(task.isSuccessful&& task.result !=null)
+            {
+                val users=ArrayList<User>()
+                for(documentSnapShot in task.result)
+                {
+                    if(documentSnapShot.id==userEmail)
+                    {
+                        continue
+                    }
+
+                    val user=User(email = documentSnapShot.getString(FBConstants.KEY_EMAIL)?:"", token = documentSnapShot.getString(FBConstants.KEY_FCM_TOKEN)?:"")
+                    users.add(user)
+                }
+                if(users.size>0)
+                {
+                    mListener.onUserGetSuccessfully(users)
+                }
+                else
+                {
+                    mListener.onUserEmpty()
+                }
+            }
+            else
+            {
+                mListener.onUserGetFailure(task.exception.toString())
+            }
+        }
     }
 
 

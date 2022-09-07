@@ -12,6 +12,7 @@ object FBConstants
 
 object AppAlerts
 {
+    const val NO_USER_AVALABLE="No users available"
     const val NO_USER_EXCEPTION = "com.google.firebase.auth.FirebaseAuthInvalidUserException: There is no user record corresponding to this identifier. The user may have been deleted."
 
     const val INCORRECT_EMAIL="Incorrect Email"
