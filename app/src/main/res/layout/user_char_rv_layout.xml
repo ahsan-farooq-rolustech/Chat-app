@@ -32,6 +32,7 @@
         android:maxLines="1"
         android:textColor="@color/primary_text"
         android:textSize="@dimen/_13ssp"
+        android:text="Muhammad Ahsan Farooq"
         app:layout_constraintBottom_toTopOf="@+id/vViewSupporter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imvImageProfile"/>
@@ -44,6 +45,7 @@
         android:layout_marginEnd="@dimen/_8sdp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:text="ahsan.farooq@rolustech.net"
         android:textColor="@color/secondary_text"
         android:textSize="@dimen/_10ssp"
         app:layout_constraintEnd_toEndOf="parent"

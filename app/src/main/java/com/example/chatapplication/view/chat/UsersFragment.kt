@@ -1,6 +1,7 @@
 package com.example.chatapplication.view.chat
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -57,12 +58,13 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListinner
         binding=FragmentUsersBinding.inflate(layoutInflater,container,false)
         setListeners()
         setHelpers()
+        getUsers()
         return binding.root
     }
 
     private fun setListeners()
     {
-
+        binding.imvBack.setOnClickListener(this)
     }
 
     private fun setHelpers()
@@ -80,7 +82,12 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListinner
 
     override fun onClick(v: View?)
     {
-        TODO("Not yet implemented")
+        when(v?.id)
+        {
+            R.id.imvBack->{
+                requireActivity().onBackPressed()
+            }
+        }
     }
 
     private fun loading(isLoading:Boolean)
@@ -105,17 +112,20 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListinner
     {
         adapter= UserChatAdapter(requireContext(),users)
         binding.rvUsers.adapter=adapter
+        adapter.notifyDataSetChanged()
         binding.rvUsers.visibility=View.VISIBLE
+        loading(false)
     }
 
     override fun onUserDoesNotExists()
     {
-
+        showErrorMessage()
     }
 
     override fun onUserGetFailure(error: String)
     {
-
+        showErrorMessage()
+        Log.d("onUserGetFailure", error)
     }
 
 

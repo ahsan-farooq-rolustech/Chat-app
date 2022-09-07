@@ -8,20 +8,20 @@ class AuthRepository(private val mListinner:IFBAuthListener)
 {
     fun checkIfUserExists(email:String)
     {
-        val fireStore=ChatApplication.firestore
-        val docRef = fireStore.collection(FBConstants.COLLECTION_USERS).document(ChatApplication.fbAuth.currentUser!!.uid)
-        /*docRef.get().addOnSuccessListener{
-        }*/ //for getting the simple values of table
-        //if you want to get the realTimeChange
-        docRef.addSnapshotListener { value, error ->
-            if(value?.exists() == true)
-            {
-                mListinner.onUserExists()
-            }
-            else
-            {
-                mListinner.onUserDoesNotExists()
-            }
-        }
+//        val fireStore=ChatApplication.firestore
+//        val docRef = fireStore.collection(FBConstants.COLLECTION_USERS).document(ChatApplication.fbAuth.currentUser!!.uid)
+//        /*docRef.get().addOnSuccessListener{
+//        }*/ //for getting the simple values of table
+//        //if you want to get the realTimeChange
+//        docRef.addSnapshotListener { value, error ->
+//            if(value?.exists() == true)
+//            {
+//                mListinner.onUserExists()
+//            }
+//            else
+//            {
+//                mListinner.onUserDoesNotExists()
+//            }
+//        }
     }
 }

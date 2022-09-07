@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.chatapplication.R
@@ -15,7 +16,7 @@ import com.example.chatapplication.utilities.utils.IFirestoreListinner
 import com.google.firebase.messaging.FirebaseMessaging
 
 
-class ShowAllChatFragment : Fragment(), IFBAuthListener,IFirestoreListinner, View.OnClickListener
+class ChatFragment : Fragment(), IFBAuthListener,IFirestoreListinner, View.OnClickListener
 {
 
     private lateinit var binding: FragmentChatBinding
@@ -29,12 +30,16 @@ class ShowAllChatFragment : Fragment(), IFBAuthListener,IFirestoreListinner, Vie
         setHelpers()
         setListeners()
         getToken()
-        return inflater.inflate(R.layout.fragment_chat, container, false)
+        return binding.root
     }
 
     private fun setListeners()
     {
-        binding.fabNewChat.setOnClickListener(this)
+        binding.fabNewChat.setOnClickListener{
+            Toast.makeText(requireContext(), "floating action button clicked", Toast.LENGTH_SHORT).show()
+            val action = ChatFragmentDirections.actionChatFragmentToUsersFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
     }
 
     private fun setHelpers()
@@ -61,8 +66,8 @@ class ShowAllChatFragment : Fragment(), IFBAuthListener,IFirestoreListinner, Vie
         {
             R.id.fabNewChat ->
             {
-                val action = ShowAllChatFragmentDirections.actionChatFragmentToUsersFragment()
-                Navigation.findNavController(v).navigate(action)
+//                val action = ShowAllChatFragmentDirections.actionChatFragmentToUsersFragment()
+//                Navigation.findNavController(binding.root).navigate(action)
             }
         }
     }

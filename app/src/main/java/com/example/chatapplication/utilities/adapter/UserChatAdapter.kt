@@ -29,8 +29,8 @@ class UserChatAdapter(private val context: Context,private val userList:ArrayLis
     {
         val data=userList[position]
         holder.binding.apply {
-            this.tvName.text=data.name
-            this.tvEmail.text=data.image
+            this.tvName.text=position.toString()
+            this.tvEmail.text=data.email
             //this.imvImageProfile.setImageBitmap(getUserImage(data.image))
         }
     }
