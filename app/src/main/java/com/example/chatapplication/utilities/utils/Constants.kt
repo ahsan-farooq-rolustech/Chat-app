@@ -3,6 +3,9 @@ package com.example.chatapplication.utilities.utils
 object FBConstants
 {
     const val KEY_EMAIL="email"
+    const val KEY_FIRST_NAME="first_name"
+    const val KEY_LAST_NAME="last_name"
+    const val KEY_USER_IMAGE="image"
     const val COLLECTION_USERS="users"
     const val KEY_FCM_TOKEN="fcmToken"
     const val LOGIN = 1

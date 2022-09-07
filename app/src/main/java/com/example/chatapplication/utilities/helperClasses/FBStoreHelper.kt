@@ -20,6 +20,9 @@ class FBStoreHelper
         val docRef = ChatApplication.firestore.collection(FBConstants.COLLECTION_USERS).document(email)
         val userVal = HashMap<String, Any>()
         userVal[FBConstants.KEY_EMAIL] = email
+        userVal[FBConstants.KEY_FIRST_NAME]=firstName
+        userVal[FBConstants.KEY_LAST_NAME]=lastName
+        userVal[FBConstants.KEY_USER_IMAGE]=imageUri
 
         //Successfully Inserted Listener, Failure listener can also be handled
         docRef.set(userVal).addOnSuccessListener {
