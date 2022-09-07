@@ -15,7 +15,7 @@ class FBStoreHelper
         mListener = listener
     }
 
-    fun insertUser(email: String)
+    fun insertUser(email: String,firstName:String,lastName:String,imageUri:String)
     {
         val docRef = ChatApplication.firestore.collection(FBConstants.COLLECTION_USERS).document(email)
         val userVal = HashMap<String, Any>()

@@ -19,7 +19,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 
-class ImageHelper(mObject: Object, isActivity: Boolean) {
+class ImageHelper(mObject: Any, isActivity: Boolean) {
     private lateinit var mListener: IImageResultListener
 
     /**

@@ -1,6 +1,7 @@
 package com.example.chatapplication.view.authentication
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
@@ -13,15 +14,15 @@ import androidx.navigation.Navigation
 import com.example.chatapplication.R
 import com.example.chatapplication.data.repository.AuthRepository
 import com.example.chatapplication.databinding.FragmentSigninBinding
-import com.example.chatapplication.utilities.helperClasses.FBAuthHelper
-import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
+import com.example.chatapplication.utilities.helperClasses.*
 import com.example.chatapplication.utilities.utils.*
 import com.example.chatapplication.viewmodel.AuthViewModel
 import com.example.chatapplication.viewmodel.viewModelFactory.AuthViewModelFactory
 import java.io.ByteArrayOutputStream
 
 
-class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener,IFirestoreListinner
+class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFirestoreListinner,
+    IImageResultListener
 {
     private lateinit var binding: FragmentSigninBinding
     private lateinit var authHelper: FBAuthHelper
@@ -29,23 +30,29 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener,IFirest
     private var isUserExist = AppConstants.USER_EXISTANCE_UNKNOWN
     private lateinit var authViewModel: AuthViewModel
     private lateinit var email: String
+    private lateinit var imageHelper: ImageHelper
+    private lateinit var userImage: Uri
+    private lateinit var firstName:String
+    private lateinit var lastName:String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
         // Inflate the layout for this fragment
         binding = FragmentSigninBinding.inflate(layoutInflater, container, false)
-        setViewModel()
+//        setViewModel()
         setListeners()
         setHelpers()
-
         return binding.root
     }
 
-    private fun setViewModel()
-    {
-        val authRepository = AuthRepository(this)
-        authViewModel = ViewModelProvider(this, AuthViewModelFactory(requireActivity().application, authRepository)).get(AuthViewModel::class.java)
-    }
+//    private fun setViewModel()
+//    {
+//        val authRepository = AuthRepository(this)
+//        authViewModel = ViewModelProvider(
+//            this,
+//            AuthViewModelFactory(requireActivity().application, authRepository)
+//        ).get(AuthViewModel::class.java)
+//    }
 
     private fun setHelpers()
     {
@@ -53,11 +60,14 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener,IFirest
         authHelper.setListener(this)
         firestoreHelper = FBStoreHelper()
         firestoreHelper.setListener(this)
+        imageHelper = ImageHelper(this, false)
+        imageHelper.setImageListener(this)
     }
 
     private fun setListeners()
     {
         binding.cvSignin.setOnClickListener(this)
+        binding.imvProfile.setOnClickListener(this)
     }
 
     override fun onClick(v: View?)
@@ -68,35 +78,22 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener,IFirest
             {
                 authenticate()
             }
+
+            R.id.imvProfile ->
+            {
+                imageHelper.getImage(ImageSource.Gallery)
+            }
         }
     }
 
     private fun authenticate()
     {
         showCircularProgress()
-//        authViewModel.checkIfUserExists(binding.etEmail.text.toString())
-//        val email = binding.etEmail.text.toString()
-//        val password = binding.etPasword.text.toString()
-//        if(!isUserExist)
-//        {
-//            val confirmPassword=binding.etConfirmPasword.text.toString()
-//            if(!validateInputs(email,password,confirmPassword))
-//            {
-//                showCircularProgress(false)
-//                return
-//            }
-//            authHelper.authenticateUser(email,password,FBConstants.REGISTER)
-//            return
-//        }
-//        if(!validateInputs(email,password,""))
-//        {
-//            showCircularProgress(false)
-//            return
-//        }
-//        authHelper.authenticateUser(email, password, FBConstants.LOGIN)
         email = binding.etEmail.text.toString()
         val password = binding.etPasword.text.toString()
         val confirmPassword = binding.etConfirmPasword.text.toString()
+        firstName=binding.etFirstName.text.toString()
+        lastName=binding.etLastName.text.toString()
         if (isUserExist == AppConstants.USER_EXISTANCE_UNKNOWN)
         {
 
@@ -158,11 +155,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener,IFirest
         showCircularProgress(false)
         requireContext().showToastMessage(error)
         Log.d("onLoginError", error)
-        if (error == AppAlerts.NO_USER_EXCEPTION)
-        {
-            binding.etConfirmPasword.visibility = View.VISIBLE
-//            isUserExist=false
-        }
+
     }
 
     override fun onRegistrationError(error: String)
@@ -176,16 +169,16 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener,IFirest
     {
         showCircularProgress(false)
         requireContext().showToastMessage("login success")
-        val action=SignInFragmentDirections.actionSigninFragmentFragmentToShowAllChatFragment()
+        val action = SignInFragmentDirections.actionSigninFragmentFragmentToShowAllChatFragment()
         Navigation.findNavController(binding.root).navigate(action)
-        super.onLoginSuccess()
     }
 
     override fun onCompleteRegistration()
     {
         showCircularProgress(false)
         requireContext().showToastMessage("registration success")
-        firestoreHelper.insertUser(email = email)
+        firestoreHelper.insertUser(email = email,firstName=firstName, lastName = lastName, imageUri = userImage.toString())
+        selectSignInMode()
     }
 
     private fun showCircularProgress(show: Boolean = true)
@@ -201,18 +194,20 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener,IFirest
     override fun onUserExists()
     {
         isUserExist = AppConstants.USER_EXISTS
-        binding.etPasword.visibility = View.VISIBLE
+//        binding.etPasword.visibility = View.VISIBLE
         showCircularProgress(false)
-        binding.tvButtonText.text = getString(R.string.sign_in)
+        selectSignInMode()
+//        binding.tvButtonText.text = getString(R.string.sign_in)
     }
 
     override fun onUserDoesNotExists()
     {
-        binding.etPasword.visibility = View.VISIBLE
-        binding.etConfirmPasword.visibility = View.VISIBLE
+//        binding.etPasword.visibility = View.VISIBLE
+//        binding.etConfirmPasword.visibility = View.VISIBLE
         isUserExist = AppConstants.USER_DOESNOT_EXISTS
         showCircularProgress(false)
-        binding.tvButtonText.text = getString(R.string.sign_up)
+        selectSignUpMode()
+//        binding.tvButtonText.text = getString(R.string.sign_up)
     }
 
     override fun onUserInsertedSuccessfully()
@@ -220,15 +215,40 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener,IFirest
         requireContext().showToastMessage("user inserted on firestore")
     }
 
-    private fun encodedImage(bitmap:Bitmap): String?
+//    private fun encodedImage(bitmap: Bitmap): String?
+//    {
+//        val previewWidth = 150
+//        val previewHeight = bitmap.height * previewWidth / bitmap.width
+//        val previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false)
+//        val byteOutputStream = ByteArrayOutputStream()
+//        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteOutputStream)
+//        val bytes = byteOutputStream.toByteArray()
+//        return Base64.encodeToString(bytes, Base64.DEFAULT)
+//    }
+
+    override fun onImageUriResult(uri: List<Uri>, isSingle: Boolean)
     {
-        val previewWidth=150
-        val previewHeight =bitmap.height*previewWidth/bitmap.width
-        val previewBitmap=Bitmap.createScaledBitmap(bitmap,previewWidth,previewHeight,false)
-        val byteOutputStream=ByteArrayOutputStream()
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG,50,byteOutputStream)
-        val bytes=byteOutputStream.toByteArray()
-        return Base64.encodeToString(bytes,Base64.DEFAULT)
+        userImage=uri[0]
+    }
+
+    private fun selectSignUpMode()
+    {
+        binding.imvProfile.visibility=View.VISIBLE
+        binding.etPasword.visibility=View.VISIBLE
+        binding.etConfirmPasword.visibility=View.VISIBLE
+        binding.etFirstName.visibility=View.VISIBLE
+        binding.etLastName.visibility=View.VISIBLE
+        binding.tvButtonText.text=getString(R.string.sign_up)
+    }
+
+    private fun selectSignInMode()
+    {
+        binding.imvProfile.visibility=View.GONE
+        binding.etPasword.visibility=View.VISIBLE
+        binding.etConfirmPasword.visibility=View.GONE
+        binding.etFirstName.visibility=View.GONE
+        binding.etLastName.visibility=View.GONE
+        binding.tvButtonText.text=getString(R.string.sign_in)
     }
 
 }
