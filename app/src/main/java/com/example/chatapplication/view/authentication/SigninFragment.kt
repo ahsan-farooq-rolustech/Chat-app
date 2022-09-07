@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.example.chatapplication.R
 import com.example.chatapplication.data.repository.AuthRepository
 import com.example.chatapplication.databinding.FragmentSigninBinding
@@ -171,11 +172,13 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener
         requireContext().showToastMessage("registration error")
     }
 
-    override fun onCompleteLogin()
+    override fun onLoginSuccess()
     {
         showCircularProgress(false)
         requireContext().showToastMessage("login success")
-        super.onCompleteLogin()
+        val action=SignInFragmentDirections.actionSigninFragmentFragmentToShowAllChatFragment()
+        Navigation.findNavController(binding.root).navigate(action)
+        super.onLoginSuccess()
     }
 
     override fun onCompleteRegistration()

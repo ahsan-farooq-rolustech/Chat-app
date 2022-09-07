@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.utilities.utils.FBConstants
 import com.example.chatapplication.utilities.utils.IFBAuthListener
-import com.example.chatapplication.utilities.utils.showToastMessage
 
 class FBAuthHelper(private val context: Context)
 {
@@ -25,7 +24,7 @@ class FBAuthHelper(private val context: Context)
                 ChatApplication.fbAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                     if (task.isSuccessful)
                     {
-                        mListener.onCompleteLogin()
+                        mListener.onLoginSuccess()
                     }
                     else
                     {

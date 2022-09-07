@@ -9,5 +9,14 @@
         android:id="@+id/signinFragmentFragment"
         android:name="com.example.chatapplication.view.authentication.SignInFragment"
         android:label="fragment_signin_fragment"
-        tools:layout="@layout/fragment_signin" />
+        tools:layout="@layout/fragment_signin" >
+        <action
+            android:id="@+id/action_signinFragmentFragment_to_showAllChatFragment"
+            app:destination="@id/showAllChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/showAllChatFragment"
+        android:name="com.example.chatapplication.view.chat.ShowAllChatFragment"
+        android:label="fragment_show_all_chat"
+        tools:layout="@layout/fragment_show_all_chat" />
 </navigation>
