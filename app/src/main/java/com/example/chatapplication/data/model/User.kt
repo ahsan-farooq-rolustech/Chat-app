@@ -6,5 +6,6 @@ data class User(
     val name:String="",
     val email:String,
     val image:String="",
-    val token:String
+    val token:String,
+    val id:String=email
 ):Serializable

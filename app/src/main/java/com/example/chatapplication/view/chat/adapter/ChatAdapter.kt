@@ -9,7 +9,7 @@ import com.example.chatapplication.data.model.ChatMessage
 import com.example.chatapplication.databinding.ItemContainerReceivedMessageBinding
 import com.example.chatapplication.databinding.ItemContainerSentMessageBinding
 
-class ChatAdapter(private val chatMessages:List<ChatMessage>,private val receivedImageProfileImage:Bitmap,private val senderId:String):RecyclerView.Adapter<RecyclerView.ViewHolder>()
+class ChatAdapter(private val chatMessages:List<ChatMessage>,private val receivedImageProfileImage:Bitmap?,private val senderId:String):RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
     companion object
     {
@@ -30,10 +30,11 @@ class ChatAdapter(private val chatMessages:List<ChatMessage>,private val receive
 
     class ReceivedMessageViewHolder(val binding: ItemContainerReceivedMessageBinding):RecyclerView.ViewHolder(binding.root)
     {
-        fun setData(chatMessage: ChatMessage,receiverImage:Bitmap)
+        fun setData(chatMessage: ChatMessage,receiverImage:Bitmap?)
         {
             binding.tvMessage.text=chatMessage.message
             binding.tvDateTime.text=chatMessage.dateTime
+            if(receiverImage!=null)
             binding.imvProfile.setImageBitmap(receiverImage)
         }
     }

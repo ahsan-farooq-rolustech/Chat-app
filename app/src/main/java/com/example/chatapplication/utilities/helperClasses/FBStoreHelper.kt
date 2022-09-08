@@ -17,7 +17,7 @@ class FBStoreHelper
 
     fun insertUser(email: String,firstName:String,lastName:String,imageUri:String)
     {
-        val docRef = ChatApplication.firestore.collection(FBConstants.COLLECTION_USERS).document(email)
+        val docRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).document(email)
         val userVal = HashMap<String, Any>()
         userVal[FBConstants.KEY_EMAIL] = email
         userVal[FBConstants.KEY_FIRST_NAME]=firstName
@@ -33,7 +33,7 @@ class FBStoreHelper
 
     fun isUserExists(email: String)
     {
-        ChatApplication.firestore.collection(FBConstants.COLLECTION_USERS).whereEqualTo(FBConstants.KEY_EMAIL, email).get().addOnCompleteListener { task ->
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).whereEqualTo(FBConstants.KEY_EMAIL, email).get().addOnCompleteListener { task ->
             if (task.isSuccessful)
             {
                 if (task.result.size() > 0)
@@ -54,13 +54,13 @@ class FBStoreHelper
 
     fun updateToken(token: String)
     {
-        ChatApplication.firestore.collection(FBConstants.COLLECTION_USERS).document(ChatApplication.fbAuth.currentUser?.email.toString()).update(FBConstants.KEY_FCM_TOKEN, token)
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).document(ChatApplication.fbAuth.currentUser?.email.toString()).update(FBConstants.KEY_FCM_TOKEN, token)
     }
 
     fun getUsers()
     {
         val userEmail=ChatApplication.fbAuth.currentUser?.email
-        ChatApplication.firestore.collection(FBConstants.COLLECTION_USERS).get().addOnCompleteListener { task ->
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).get().addOnCompleteListener { task ->
             if(task.isSuccessful&& task.result !=null)
             {
                 val users=ArrayList<User>()
@@ -93,6 +93,11 @@ class FBStoreHelper
                 mListener.onUserGetFailure(task.exception.toString())
             }
         }
+    }
+
+    fun uploadMessage(message: HashMap<String, Any>)
+    {
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CHAT).add(message)
     }
 
 
