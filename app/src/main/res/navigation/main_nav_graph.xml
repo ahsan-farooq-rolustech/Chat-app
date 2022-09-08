@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_signin" >
         <action
             android:id="@+id/action_signinFragmentFragment_to_showAllChatFragment"
-            app:destination="@id/ChatFragment" />
+            app:destination="@id/ChatOfUsersFragment" />
     </fragment>
     <fragment
-        android:id="@+id/ChatFragment"
+        android:id="@+id/ChatOfUsersFragment"
         android:name="com.example.chatapplication.view.chat.ChatOfUsersFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat_of_users" >
@@ -27,5 +27,18 @@
         android:id="@+id/usersFragment"
         android:name="com.example.chatapplication.view.chat.UsersFragment"
         android:label="fragment_users"
-        tools:layout="@layout/fragment_users" />
+        tools:layout="@layout/fragment_users" >
+        <action
+            android:id="@+id/action_usersFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.chatapplication.view.chat.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="user"
+            app:argType="com.example.chatapplication.data.model.User" />
+    </fragment>
 </navigation>

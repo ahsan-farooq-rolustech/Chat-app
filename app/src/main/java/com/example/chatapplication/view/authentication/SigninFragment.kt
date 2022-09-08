@@ -1,27 +1,21 @@
 package com.example.chatapplication.view.authentication
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.chatapplication.R
-import com.example.chatapplication.data.repository.AuthRepository
 import com.example.chatapplication.databinding.FragmentSigninBinding
 import com.example.chatapplication.utilities.helperClasses.*
 import com.example.chatapplication.utilities.utils.*
 import com.example.chatapplication.viewmodel.AuthViewModel
-import com.example.chatapplication.viewmodel.viewModelFactory.AuthViewModelFactory
-import java.io.ByteArrayOutputStream
 
 
-class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFirestoreListinner,
+class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFirestoreListener,
     IImageResultListener
 {
     private lateinit var binding: FragmentSigninBinding
@@ -88,7 +82,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
 
     private fun authenticate()
     {
-        showCircularProgress()
+        isLoading()
         email = binding.etEmail.text.toString()
         val password = binding.etPasword.text.toString()
         val confirmPassword = binding.etConfirmPasword.text.toString()
@@ -129,6 +123,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         if (!Validators.validateEmail(email))
         {
             binding.etEmail.error = AppAlerts.INCORRECT_EMAIL
+            isLoading(false)
             return false
         }
 
@@ -136,6 +131,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         if (validateResult == ValidationConstants.PASSWORD_LEN_ERROR)
         {
             binding.etPasword.error = AppAlerts.PASSWORD_LENGTH_SHORT
+            isLoading(false)
             return false
         }
 
@@ -143,7 +139,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         {
             binding.etPasword.error = AppAlerts.PASSWORD_DONOT_MATCH
             binding.etConfirmPasword.error = AppAlerts.PASSWORD_DONOT_MATCH
-
+            isLoading(false)
             return false
         }
 
@@ -152,22 +148,23 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
 
     override fun onLoginError(error: String)
     {
-        showCircularProgress(false)
+        isLoading(false)
         requireContext().showToastMessage(error)
         Log.d("onLoginError", error)
-
     }
 
     override fun onRegistrationError(error: String)
     {
-        showCircularProgress(false)
+        isLoading(false)
         Log.d("onRegistrationError", error)
+        //TODO:show a proper mesage
         requireContext().showToastMessage("registration error")
     }
 
     override fun onLoginSuccess()
     {
-        showCircularProgress(false)
+        isLoading(false)
+        //TODO:show a proper mesage
         requireContext().showToastMessage("login success")
         val action = SignInFragmentDirections.actionSigninFragmentFragmentToShowAllChatFragment()
         Navigation.findNavController(binding.root).navigate(action)
@@ -175,13 +172,14 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
 
     override fun onCompleteRegistration()
     {
-        showCircularProgress(false)
+        isLoading(false)
+        //TODO:show a proper mesage
         requireContext().showToastMessage("registration success")
         firestoreHelper.insertUser(email = email,firstName=firstName, lastName = lastName, imageUri = userImage.toString())
         selectSignInMode()
     }
 
-    private fun showCircularProgress(show: Boolean = true)
+    private fun isLoading(show: Boolean = true)
     {
         if (show) binding.pbLoader.visibility = View.VISIBLE
         else binding.pbLoader.visibility = View.GONE
@@ -195,7 +193,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     {
         isUserExist = AppConstants.USER_EXISTS
 //        binding.etPasword.visibility = View.VISIBLE
-        showCircularProgress(false)
+        isLoading(false)
         selectSignInMode()
 //        binding.tvButtonText.text = getString(R.string.sign_in)
     }
@@ -205,14 +203,16 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
 //        binding.etPasword.visibility = View.VISIBLE
 //        binding.etConfirmPasword.visibility = View.VISIBLE
         isUserExist = AppConstants.USER_DOESNOT_EXISTS
-        showCircularProgress(false)
+        isLoading(false)
         selectSignUpMode()
 //        binding.tvButtonText.text = getString(R.string.sign_up)
     }
 
     override fun onUserInsertedSuccessfully()
     {
+        //TODO:show a proper mesage
         requireContext().showToastMessage("user inserted on firestore")
+        selectSignInMode()
     }
 
 //    private fun encodedImage(bitmap: Bitmap): String?

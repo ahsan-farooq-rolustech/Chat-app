@@ -9,17 +9,21 @@
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/drawable/background_image.xml" value="0.163" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/drawable/background_input.xml" value="0.22" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/drawable/background_primary_color_round.xml" value="0.1645" />
+        <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/drawable/background_received_message.xml" value="0.163" />
+        <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/drawable/background_sent_message.xml" value="0.163" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/activity_main.xml" value="0.3567708333333333" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/activity_signin.xml" value="0.1" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/activity_signup.xml" value="0.371875" />
-        <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/fragment_chat.xml" value="0.33" />
+        <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/fragment_chat.xml" value="0.34610630407911" />
+        <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/fragment_chat_of_users.xml" value="0.371875" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/fragment_show_all_chat.xml" value="0.33" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/fragment_signin.xml" value="0.25" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/fragment_signin_fragment.xml" value="0.3578125" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/fragment_users.xml" value="0.33" />
+        <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/item_container_received_message.xml" value="0.30427350427350425" />
+        <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/item_container_sent_message.xml" value="0.25" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/user_char_rv_layour.xml" value="0.371875" />
         <entry key="..\:/Users/ahsan.farooq/AndroidStudioProjects/Chatapplication/app/src/main/res/layout/user_char_rv_layout.xml" value="0.25" />
-        <entry key="..\:/Users/ahsan/StudioProjects/Chat-app/app/src/main/res/layout/fragment_signin.xml" value="0.24547101449275363" />
       </map>
     </option>
   </component>

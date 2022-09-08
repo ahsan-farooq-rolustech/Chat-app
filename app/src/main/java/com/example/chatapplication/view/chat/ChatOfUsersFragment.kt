@@ -8,16 +8,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.chatapplication.R
-import com.example.chatapplication.databinding.FragmentChatBinding
 import com.example.chatapplication.databinding.FragmentChatOfUsersBinding
 import com.example.chatapplication.utilities.helperClasses.FBAuthHelper
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
 import com.example.chatapplication.utilities.utils.IFBAuthListener
-import com.example.chatapplication.utilities.utils.IFirestoreListinner
+import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.google.firebase.messaging.FirebaseMessaging
 
 
-class ChatOfUsersFragment : Fragment(), IFBAuthListener,IFirestoreListinner, View.OnClickListener
+class ChatOfUsersFragment : Fragment(), IFBAuthListener,IFirestoreListener, View.OnClickListener
 {
 
     private lateinit var binding: FragmentChatOfUsersBinding

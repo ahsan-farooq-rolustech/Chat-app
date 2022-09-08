@@ -6,17 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import com.example.chatapplication.R
 import com.example.chatapplication.data.model.User
-import com.example.chatapplication.databinding.FragmentChatBinding
 import com.example.chatapplication.databinding.FragmentUsersBinding
-import com.example.chatapplication.utilities.adapter.UserChatAdapter
-import com.example.chatapplication.utilities.helperClasses.FBAuthHelper
+import com.example.chatapplication.view.chat.adapter.UserChatAdapter
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
 import com.example.chatapplication.utilities.utils.AppAlerts
-import com.example.chatapplication.utilities.utils.IFirestoreListinner
+import com.example.chatapplication.utilities.utils.IFirestoreListener
+import com.example.chatapplication.utilities.utils.IUserListener
 
-class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListinner
+class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserListener
 {
 //    // TODO: Rename and change types of parameters
 //    private var param1: String? = null
@@ -108,15 +108,21 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListinner
         binding.tvErrorMessage.visibility=View.VISIBLE
     }
 
+
     override fun onUserGetSuccessfully(users: ArrayList<User>)
     {
-        adapter= UserChatAdapter(requireContext(),users)
-        binding.rvUsers.adapter=adapter
-        adapter.notifyDataSetChanged()
+        setAdapter(users)
         binding.rvUsers.visibility=View.VISIBLE
         loading(false)
     }
 
+    private fun setAdapter(users: ArrayList<User>)
+    {
+        adapter= UserChatAdapter(requireContext(),users)
+        adapter.setListener(this)
+        binding.rvUsers.adapter=adapter
+        adapter.notifyDataSetChanged()
+    }
     override fun onUserDoesNotExists()
     {
         showErrorMessage()
@@ -126,6 +132,12 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListinner
     {
         showErrorMessage()
         Log.d("onUserGetFailure", error)
+    }
+
+    override fun onUserClicked(user: User)
+    {
+        val action=UsersFragmentDirections.actionUsersFragmentToChatFragment(user)
+        Navigation.findNavController(binding.root).navigate(action)
     }
 
 

@@ -3,14 +3,14 @@ package com.example.chatapplication.utilities.helperClasses
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.data.model.User
 import com.example.chatapplication.utilities.utils.FBConstants
-import com.example.chatapplication.utilities.utils.IFirestoreListinner
+import com.example.chatapplication.utilities.utils.IFirestoreListener
 
 class FBStoreHelper
 {
 
-    private lateinit var mListener: IFirestoreListinner
+    private lateinit var mListener: IFirestoreListener
 
-    fun setListener(listener: IFirestoreListinner)
+    fun setListener(listener: IFirestoreListener)
     {
         mListener = listener
     }
@@ -71,7 +71,12 @@ class FBStoreHelper
                         continue
                     }
 
-                    val user=User(email = documentSnapShot.getString(FBConstants.KEY_EMAIL)?:"", token = documentSnapShot.getString(FBConstants.KEY_FCM_TOKEN)?:"")
+                    val user=User(
+                        email = documentSnapShot.getString(FBConstants.KEY_EMAIL)?:"",
+                        token = documentSnapShot.getString(FBConstants.KEY_FCM_TOKEN)?:"",
+                        name = documentSnapShot.getString(FBConstants.KEY_FIRST_NAME)?:"",
+                        image = documentSnapShot.getString(FBConstants.KEY_USER_IMAGE)?:""
+                    )
                     users.add(user)
                 }
                 if(users.size>0)

@@ -2,16 +2,16 @@ package com.example.chatapplication.utilities.utils
 
 import com.example.chatapplication.data.model.User
 
-interface IFBAuthListener {
+interface IFBAuthListener
+{
     fun onCompleteRegistration() {}
     fun onRegistrationError(error:String){}
     fun onLoginSuccess() {}
     fun onLoginError(error:String){}
-
-
 }
 
-interface IFirestoreListinner{
+interface IFirestoreListener
+{
     fun onUserExists(){}
     fun onUserDoesNotExists(){}
     fun onFirestoreError(error:String){}
@@ -21,4 +21,9 @@ interface IFirestoreListinner{
     fun onUserGetFailure(error: String){}
 }
 
+
+interface IUserListener
+{
+    fun onUserClicked(user:User){}
+}
 

@@ -1,4 +1,4 @@
-package com.example.chatapplication.utilities.adapter
+package com.example.chatapplication.view.chat.adapter
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -8,11 +8,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapplication.databinding.UserCharRvLayoutBinding
+import com.example.chatapplication.utilities.utils.IUserListener
 
 
 class UserChatAdapter(private val context: Context,private val userList:ArrayList<com.example.chatapplication.data.model.User>) : RecyclerView.Adapter<UserChatAdapter.ViewHolder>()
 {
+    private lateinit var mListener:IUserListener
+
+
     class ViewHolder(val binding: UserCharRvLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+
+    fun setListener(listener: IUserListener)
+    {
+        mListener=listener
+    }
 
     private fun getUserImage(encodedImage: String): Bitmap?
     {
@@ -31,6 +40,9 @@ class UserChatAdapter(private val context: Context,private val userList:ArrayLis
         holder.binding.apply {
             this.tvName.text=position.toString()
             this.tvEmail.text=data.email
+            this.root.setOnClickListener{
+                mListener.onUserClicked(data)
+            }
             //this.imvImageProfile.setImageBitmap(getUserImage(data.image))
         }
     }
