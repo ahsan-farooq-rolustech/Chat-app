@@ -34,9 +34,9 @@
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.chatapplication.view.chat.ChatFragment"
+        android:name="com.example.chatapplication.view.chat.MessagesFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" >
+        tools:layout="@layout/fragment_messages" >
         <argument
             android:name="userResponse"
             app:argType="com.example.chatapplication.data.response.UserResponse" />

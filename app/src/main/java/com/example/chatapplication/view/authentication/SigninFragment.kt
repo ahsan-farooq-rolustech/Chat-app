@@ -98,6 +98,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
             else
             {
                 binding.etEmail.error = AppAlerts.INCORRECT_EMAIL
+                isLoading(false)
             }
         }
 
@@ -184,28 +185,19 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         if (show) binding.pbLoader.visibility = View.VISIBLE
         else binding.pbLoader.visibility = View.GONE
     }
-//    private fun showCircularProgress(false)
-//    {
-//        binding.pbLoader.visibility=View.GONE
-//    }
 
     override fun onUserExists()
     {
         isUserExist = AppConstants.USER_EXISTS
-//        binding.etPasword.visibility = View.VISIBLE
         isLoading(false)
         selectSignInMode()
-//        binding.tvButtonText.text = getString(R.string.sign_in)
     }
 
     override fun onUserDoesNotExists()
     {
-//        binding.etPasword.visibility = View.VISIBLE
-//        binding.etConfirmPasword.visibility = View.VISIBLE
         isUserExist = AppConstants.USER_DOESNOT_EXISTS
         isLoading(false)
         selectSignUpMode()
-//        binding.tvButtonText.text = getString(R.string.sign_up)
     }
 
     override fun onUserInsertedSuccessfully()
@@ -214,17 +206,6 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         requireContext().showToastMessage("user inserted on firestore")
         selectSignInMode()
     }
-
-//    private fun encodedImage(bitmap: Bitmap): String?
-//    {
-//        val previewWidth = 150
-//        val previewHeight = bitmap.height * previewWidth / bitmap.width
-//        val previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false)
-//        val byteOutputStream = ByteArrayOutputStream()
-//        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteOutputStream)
-//        val bytes = byteOutputStream.toByteArray()
-//        return Base64.encodeToString(bytes, Base64.DEFAULT)
-//    }
 
     override fun onImageUriResult(uri: List<Uri>, isSingle: Boolean)
     {
@@ -249,6 +230,17 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         binding.etFirstName.visibility=View.GONE
         binding.etLastName.visibility=View.GONE
         binding.tvButtonText.text=getString(R.string.sign_in)
+    }
+
+    private fun selectUserUnknownMode()
+    {
+        binding.etEmail.visibility=View.VISIBLE
+        binding.imvProfile.visibility=View.GONE
+        binding.etPasword.visibility=View.GONE
+        binding.etConfirmPasword.visibility=View.GONE
+        binding.etFirstName.visibility=View.GONE
+        binding.etLastName.visibility=View.GONE
+        binding.tvButtonText.text=getString(R.string.procede)
     }
 
 }
