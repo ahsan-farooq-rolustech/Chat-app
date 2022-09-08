@@ -15,6 +15,7 @@ object FBConstants
     const val KEY_RECEIVER_ID="receiverId"
     const val KEY_MESSAGE="message"
     const val KEY_TIMESTAMP="timestamp"
+    const val KEY_STATUS = "status"
 }
 
 object AppAlerts
@@ -40,5 +41,8 @@ object AppConstants
     const val USER_EXISTS = 999
     const val USER_DOESNOT_EXISTS = 9999
     const val KEY_USER = "user"
+    const val STATUS_ACTIVE = 1
+    const val STATUS_IN_ACTIVE = 2
+    const val STATUS_OFFLINE = 3
 
 }

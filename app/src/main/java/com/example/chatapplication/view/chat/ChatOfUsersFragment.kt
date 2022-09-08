@@ -11,6 +11,7 @@ import com.example.chatapplication.R
 import com.example.chatapplication.databinding.FragmentChatOfUsersBinding
 import com.example.chatapplication.utilities.helperClasses.FBAuthHelper
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
+import com.example.chatapplication.utilities.utils.AppConstants
 import com.example.chatapplication.utilities.utils.IFBAuthListener
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -30,7 +31,13 @@ class ChatOfUsersFragment : Fragment(), IFBAuthListener,IFirestoreListener, View
         setHelpers()
         setListeners()
         getToken()
+        setUserStatus()
         return binding.root
+    }
+
+    private fun setUserStatus()
+    {
+        firestoreHelper.setStatus(AppConstants.STATUS_ACTIVE)
     }
 
     private fun setListeners()
@@ -70,6 +77,24 @@ class ChatOfUsersFragment : Fragment(), IFBAuthListener,IFirestoreListener, View
 //                Navigation.findNavController(binding.root).navigate(action)
             }
         }
+    }
+
+    override fun onPause()
+    {
+        super.onPause()
+        firestoreHelper.setStatus(AppConstants.STATUS_IN_ACTIVE)
+    }
+
+    override fun onDestroy()
+    {
+        super.onDestroy()
+        firestoreHelper.setStatus(AppConstants.STATUS_OFFLINE)
+    }
+
+    override fun onDestroyView()
+    {
+        super.onDestroyView()
+        firestoreHelper.setStatus(AppConstants.STATUS_OFFLINE)
     }
 
 

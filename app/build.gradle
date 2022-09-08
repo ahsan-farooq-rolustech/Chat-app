@@ -6,6 +6,8 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
 android {
     compileSdk 32
 
@@ -34,6 +36,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 }
 

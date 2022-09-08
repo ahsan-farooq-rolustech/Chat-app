@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import com.example.chatapplication.R
-import com.example.chatapplication.data.model.User
+import com.example.chatapplication.data.response.UserResponse
 import com.example.chatapplication.databinding.FragmentUsersBinding
 import com.example.chatapplication.view.chat.adapter.UserChatAdapter
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
@@ -109,16 +109,16 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
     }
 
 
-    override fun onUserGetSuccessfully(users: ArrayList<User>)
+    override fun onUserGetSuccessfully(userResponses: ArrayList<UserResponse>)
     {
-        setAdapter(users)
+        setAdapter(userResponses)
         binding.rvUsers.visibility=View.VISIBLE
         loading(false)
     }
 
-    private fun setAdapter(users: ArrayList<User>)
+    private fun setAdapter(userResponses: ArrayList<UserResponse>)
     {
-        adapter= UserChatAdapter(requireContext(),users)
+        adapter= UserChatAdapter(requireContext(),userResponses)
         adapter.setListener(this)
         binding.rvUsers.adapter=adapter
         adapter.notifyDataSetChanged()
@@ -134,9 +134,9 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
         Log.d("onUserGetFailure", error)
     }
 
-    override fun onUserClicked(user: User)
+    override fun onUserClicked(userResponse: UserResponse)
     {
-        val action=UsersFragmentDirections.actionUsersFragmentToChatFragment(user)
+        val action=UsersFragmentDirections.actionUsersFragmentToChatFragment(userResponse)
         Navigation.findNavController(binding.root).navigate(action)
     }
 

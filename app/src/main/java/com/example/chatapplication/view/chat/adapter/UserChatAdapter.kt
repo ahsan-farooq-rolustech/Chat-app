@@ -7,16 +7,17 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chatapplication.databinding.UserCharRvLayoutBinding
+import com.example.chatapplication.databinding.ItemContainerUserBinding
+
 import com.example.chatapplication.utilities.utils.IUserListener
 
 
-class UserChatAdapter(private val context: Context,private val userList:ArrayList<com.example.chatapplication.data.model.User>) : RecyclerView.Adapter<UserChatAdapter.ViewHolder>()
+class UserChatAdapter(private val context: Context,private val userResponseList:ArrayList<com.example.chatapplication.data.response.UserResponse>) : RecyclerView.Adapter<UserChatAdapter.ViewHolder>()
 {
     private lateinit var mListener:IUserListener
 
 
-    class ViewHolder(val binding: UserCharRvLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ItemContainerUserBinding) : RecyclerView.ViewHolder(binding.root)
 
     fun setListener(listener: IUserListener)
     {
@@ -31,25 +32,20 @@ class UserChatAdapter(private val context: Context,private val userList:ArrayLis
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
-        return ViewHolder(UserCharRvLayoutBinding.inflate(LayoutInflater.from(context),parent,false))
+        return ViewHolder(ItemContainerUserBinding.inflate(LayoutInflater.from(context),parent,false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
-        val data=userList[position]
-        holder.binding.apply {
-            this.tvName.text=position.toString()
-            this.tvEmail.text=data.email
-            this.root.setOnClickListener{
-                mListener.onUserClicked(data)
-            }
-            //this.imvImageProfile.setImageBitmap(getUserImage(data.image))
+        holder.binding.model = userResponseList[position]
+        holder.binding.clMain.setOnClickListener{
+            mListener.onUserClicked(userResponseList[position])
         }
     }
 
     override fun getItemCount(): Int
     {
-        return userList.size
+        return userResponseList.size
     }
 
 

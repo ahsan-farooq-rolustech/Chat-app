@@ -38,7 +38,7 @@
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" >
         <argument
-            android:name="user"
-            app:argType="com.example.chatapplication.data.model.User" />
+            android:name="userResponse"
+            app:argType="com.example.chatapplication.data.response.UserResponse" />
     </fragment>
 </navigation>
