@@ -16,14 +16,14 @@ class FBStoreHelper
         mListener = listener
     }
 
-    fun insertUser(email: String,firstName:String,lastName:String,imageUri:String)
+    fun insertUser(email: String, firstName: String, lastName: String, imageUri: String)
     {
         val docRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).document(email)
         val userVal = HashMap<String, Any>()
         userVal[FBConstants.KEY_EMAIL] = email
-        userVal[FBConstants.KEY_FIRST_NAME]=firstName
-        userVal[FBConstants.KEY_LAST_NAME]=lastName
-        userVal[FBConstants.KEY_USER_IMAGE]=imageUri
+        userVal[FBConstants.KEY_FIRST_NAME] = firstName
+        userVal[FBConstants.KEY_LAST_NAME] = lastName
+        userVal[FBConstants.KEY_USER_IMAGE] = imageUri
 
         //Successfully Inserted Listener, Failure listener can also be handled
         docRef.set(userVal).addOnSuccessListener {
@@ -32,7 +32,8 @@ class FBStoreHelper
 
     }
 
-    fun setStatus(status: Int){
+    fun setStatus(status: Int)
+    {
         val docRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).document(ChatApplication.fbAuth.currentUser!!.email!!)
         val userVal = HashMap<String, Any>()
         userVal[FBConstants.KEY_STATUS] = status
@@ -71,8 +72,8 @@ class FBStoreHelper
 
     fun getUsers()
     {
-        val userEmail=ChatApplication.fbAuth.currentUser?.email
-
+        val userEmail = ChatApplication.fbAuth.currentUser?.email
+//
 //        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).addSnapshotListener(EventListener { value, error ->
 //            if (error != null)
 //            {
@@ -110,28 +111,23 @@ class FBStoreHelper
 //        })
 
 
-
         ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).get().addOnCompleteListener { task ->
-            if(task.isSuccessful&& task.result !=null)
+            if (task.isSuccessful && task.result != null)
             {
-                val userResponses=ArrayList<UserResponse>()
-                for(documentSnapShot in task.result)
+                val userResponses = ArrayList<UserResponse>()
+                for (documentSnapShot in task.result)
                 {
-                    if(documentSnapShot.id==userEmail)
+                    if (documentSnapShot.id == userEmail)
                     {
                         continue
                     }
 
-                    val userResponse=UserResponse(
-                        email = documentSnapShot.getString(FBConstants.KEY_EMAIL)?:"",
-                        token = documentSnapShot.getString(FBConstants.KEY_FCM_TOKEN)?:"",
-                        name = documentSnapShot.getString(FBConstants.KEY_FIRST_NAME)?:"",
-                        image = if (documentSnapShot.getString(FBConstants.KEY_USER_IMAGE)!=null)documentSnapShot.getString(FBConstants.KEY_USER_IMAGE)!! else "",
-                        status = if ( documentSnapShot.get(FBConstants.KEY_STATUS)!=null)  documentSnapShot.get(FBConstants.KEY_STATUS)!!.toString().toInt() else 0
+                    val userResponse = UserResponse(
+                        email = documentSnapShot.getString(FBConstants.KEY_EMAIL) ?: "", token = documentSnapShot.getString(FBConstants.KEY_FCM_TOKEN) ?: "", name = documentSnapShot.getString(FBConstants.KEY_FIRST_NAME) ?: "", image = if (documentSnapShot.getString(FBConstants.KEY_USER_IMAGE) != null) documentSnapShot.getString(FBConstants.KEY_USER_IMAGE)!! else "", status = if (documentSnapShot.get(FBConstants.KEY_STATUS) != null) documentSnapShot.get(FBConstants.KEY_STATUS)!!.toString().toInt() else 0
                     )
                     userResponses.add(userResponse)
                 }
-                if(userResponses.size>0)
+                if (userResponses.size > 0)
                 {
                     mListener.onUserGetSuccessfully(userResponses)
                 }
@@ -145,6 +141,43 @@ class FBStoreHelper
                 mListener.onUserGetFailure(task.exception.toString())
             }
         }
+    }
+
+    fun getUserChanges()
+    {
+        val userEmail = ChatApplication.fbAuth.currentUser?.email
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).addSnapshotListener(EventListener { value, error ->
+            if (error != null)
+            {
+//                mListener.onUserGetFailure(error.toString())
+                return@EventListener
+            }
+
+            if (value != null)
+            {
+                val userResponses = ArrayList<UserResponse>()
+                for (documentChanges in value.documents)
+                {
+                    if (documentChanges.id == userEmail)
+                    {
+                        continue
+                    }
+
+                    val userResponse = UserResponse(
+                        email = documentChanges.getString(FBConstants.KEY_EMAIL) ?: "", token = documentChanges.getString(FBConstants.KEY_FCM_TOKEN) ?: "", name = documentChanges.getString(FBConstants.KEY_FIRST_NAME) ?: "", image = if (documentChanges.getString(FBConstants.KEY_USER_IMAGE) != null) documentChanges.getString(FBConstants.KEY_USER_IMAGE)!! else "", status = if (documentChanges.get(FBConstants.KEY_STATUS) != null) documentChanges.get(FBConstants.KEY_STATUS)!!.toString().toInt() else 0
+                    )
+                    userResponses.add(userResponse)
+                }
+                if (userResponses.size > 0)
+                {
+                    mListener.onGetUserChangesSuccessful(userResponses)
+                }
+//                else
+//                {
+//                    mListener.onUserEmpty()
+//                }
+            }
+        })
     }
 
     fun uploadMessage(message: HashMap<String, Any>)

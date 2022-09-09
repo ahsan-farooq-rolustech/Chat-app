@@ -79,23 +79,23 @@ class ChatOfUsersFragment : Fragment(), IFBAuthListener,IFirestoreListener, View
         }
     }
 
-    override fun onPause()
-    {
-        super.onPause()
-        firestoreHelper.setStatus(AppConstants.STATUS_IN_ACTIVE)
-    }
-
-    override fun onDestroy()
-    {
-        super.onDestroy()
-        firestoreHelper.setStatus(AppConstants.STATUS_OFFLINE)
-    }
-
-    override fun onDestroyView()
-    {
-        super.onDestroyView()
-        firestoreHelper.setStatus(AppConstants.STATUS_OFFLINE)
-    }
+//    override fun onPause()
+//    {
+//        super.onPause()
+//        firestoreHelper.setStatus(AppConstants.STATUS_IN_ACTIVE)
+//    }
+//
+//    override fun onDestroy()
+//    {
+//        super.onDestroy()
+//        firestoreHelper.setStatus(AppConstants.STATUS_OFFLINE)
+//    }
+//
+//    override fun onDestroyView()
+//    {
+//        super.onDestroyView()
+//        firestoreHelper.setStatus(AppConstants.STATUS_OFFLINE)
+//    }
 
 
 }

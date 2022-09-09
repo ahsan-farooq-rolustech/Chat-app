@@ -15,6 +15,7 @@ import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
 import com.example.chatapplication.utilities.utils.AppAlerts
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.utilities.utils.IUserListener
+import com.example.chatapplication.view.MainActivity
 
 class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserListener
 {
@@ -52,6 +53,7 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
     private lateinit var binding: FragmentUsersBinding
     private lateinit var firestoreHelper:FBStoreHelper
     private lateinit var adapter:UserChatAdapter
+    private lateinit var usersList:ArrayList<UserResponse>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -114,11 +116,18 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
         setAdapter(userResponses)
         binding.rvUsers.visibility=View.VISIBLE
         loading(false)
+        getChangesInUser()
+    }
+
+    private fun getChangesInUser()
+    {
+        firestoreHelper.getUserChanges()
     }
 
     private fun setAdapter(userResponses: ArrayList<UserResponse>)
     {
-        adapter= UserChatAdapter(requireContext(),userResponses)
+        usersList=userResponses
+        adapter= UserChatAdapter(MainActivity.mActivity,usersList)
         adapter.setListener(this)
         binding.rvUsers.adapter=adapter
         adapter.notifyDataSetChanged()
@@ -138,6 +147,23 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
     {
         val action=UsersFragmentDirections.actionUsersFragmentToChatFragment(userResponse)
         Navigation.findNavController(binding.root).navigate(action)
+    }
+
+    override fun onGetUserChangesSuccessful(userResponses: ArrayList<UserResponse>)
+    {
+        userResponses.removeAll(usersList.toSet())
+        for( i in userResponses)
+        {
+            for(j in 0 until usersList.size)
+            {
+                if(i.email==usersList[j].email)
+                {
+                    usersList[j]=i
+                    break
+                }
+            }
+        }
+        adapter.notifyDataSetChanged()
     }
 
 

@@ -1,10 +1,12 @@
 package com.example.chatapplication
 
 import android.app.Application
+import android.util.Log
+import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ChatApplication : Application()
+class ChatApplication : Application(),LifecycleEventObserver
 {
     companion object
     {
@@ -17,6 +19,7 @@ class ChatApplication : Application()
 
         super.onCreate()
         initFirebase()
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
     private fun initFirebase()
@@ -24,4 +27,33 @@ class ChatApplication : Application()
         fbAuth = FirebaseAuth.getInstance()
         firestore=FirebaseFirestore.getInstance()
     }
+
+    override fun onTerminate()
+    {
+        super.onTerminate()
+    }
+
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event)
+    {
+        when(event.name)
+        {
+            Lifecycle.Event.ON_START.name->
+            {
+                //foreground
+                Log.d("ChatApplication","on start")
+            }
+            Lifecycle.Event.ON_STOP.name->
+            {
+                //background
+                Log.d("ChatApplication","on stop")
+            }
+            Lifecycle.Event.ON_DESTROY.name->
+            {
+                //app is killed
+                Log.d("ChatApplication","on destroy")
+            }
+        }
+    }
+
+
 }

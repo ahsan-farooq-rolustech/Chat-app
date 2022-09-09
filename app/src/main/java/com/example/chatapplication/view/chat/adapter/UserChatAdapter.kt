@@ -7,7 +7,7 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chatapplication.databinding.ItemContainerUserBinding
+import com.example.chatapplication.databinding.AdapterUserBinding
 
 import com.example.chatapplication.utilities.utils.IUserListener
 
@@ -17,7 +17,7 @@ class UserChatAdapter(private val context: Context,private val userResponseList:
     private lateinit var mListener:IUserListener
 
 
-    class ViewHolder(val binding: ItemContainerUserBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: AdapterUserBinding) : RecyclerView.ViewHolder(binding.root)
 
     fun setListener(listener: IUserListener)
     {
@@ -32,7 +32,7 @@ class UserChatAdapter(private val context: Context,private val userResponseList:
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
-        return ViewHolder(ItemContainerUserBinding.inflate(LayoutInflater.from(context),parent,false))
+        return ViewHolder(AdapterUserBinding.inflate(LayoutInflater.from(context),parent,false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int)

@@ -2,10 +2,13 @@ package com.example.chatapplication.view.authentication
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.chatapplication.R
@@ -15,7 +18,7 @@ import com.example.chatapplication.utilities.utils.*
 import com.example.chatapplication.viewmodel.AuthViewModel
 
 
-class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFirestoreListener,
+class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFirestoreListener,TextWatcher,
     IImageResultListener
 {
     private lateinit var binding: FragmentSigninBinding
@@ -62,6 +65,8 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     {
         binding.cvSignin.setOnClickListener(this)
         binding.imvProfile.setOnClickListener(this)
+        binding.etEmail.addTextChangedListener(this)
+
     }
 
     override fun onClick(v: View?)
@@ -241,6 +246,24 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         binding.etFirstName.visibility=View.GONE
         binding.etLastName.visibility=View.GONE
         binding.tvButtonText.text=getString(R.string.procede)
+    }
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int)
+    {
+
+    }
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
+    {
+        
+    }
+
+    override fun afterTextChanged(s: Editable?)
+    {
+        if(s.toString().isEmpty())
+        {
+            selectUserUnknownMode()
+        }
     }
 
 }

@@ -20,6 +20,7 @@ interface IFirestoreListener
     fun onUserEmpty(){}
     fun onUserGetFailure(error: String){}
     fun onStatusChangedSuccess(){}
+    fun onGetUserChangesSuccessful(userResponses: ArrayList<UserResponse>){}
 }
 
 
