@@ -34,14 +34,19 @@ class FBStoreHelper
 
     fun setStatus(status: Int)
     {
-        val docRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).document(ChatApplication.fbAuth.currentUser!!.email!!)
-        val userVal = HashMap<String, Any>()
-        userVal[FBConstants.KEY_STATUS] = status
+        val email=ChatApplication.fbAuth.currentUser?.email
+        if(email!=null)
+        {
+            val docRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).document()
+            val userVal = HashMap<String, Any>()
+            userVal[FBConstants.KEY_STATUS] = status
 
-        //Successfully Inserted Listener, Failure listener can also be handled
-        docRef.update(userVal).addOnSuccessListener {
-            mListener.onStatusChangedSuccess()
+            //Successfully Inserted Listener, Failure listener can also be handled
+            docRef.update(userVal).addOnSuccessListener {
+                mListener.onStatusChangedSuccess()
+            }
         }
+
     }
 
     fun isUserExists(email: String)

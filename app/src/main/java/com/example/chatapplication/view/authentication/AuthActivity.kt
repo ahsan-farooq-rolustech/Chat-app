@@ -18,7 +18,7 @@ class AuthActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?)
     {
 
-        if(ChatApplication.fbAuth.currentUser!=null)
+        if(ChatApplication.fbAuth.currentUser?.email !=null)
         {
             startActivity(Intent(this,MainActivity::class.java))
             finish()
