@@ -1,33 +1,36 @@
 package com.example.chatapplication.view.chat
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.R
-import com.example.chatapplication.databinding.FragmentChatOfUsersBinding
+import com.example.chatapplication.databinding.FragmentInboxBinding
 import com.example.chatapplication.utilities.helperClasses.FBAuthHelper
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
 import com.example.chatapplication.utilities.utils.AppConstants
 import com.example.chatapplication.utilities.utils.IFBAuthListener
 import com.example.chatapplication.utilities.utils.IFirestoreListener
+import com.example.chatapplication.view.MainActivity
+import com.example.chatapplication.view.authentication.AuthActivity
 import com.google.firebase.messaging.FirebaseMessaging
 
 
-class ChatOfUsersFragment : Fragment(), IFBAuthListener,IFirestoreListener, View.OnClickListener
+class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnClickListener
 {
 
-    private lateinit var binding: FragmentChatOfUsersBinding
+    private lateinit var binding: FragmentInboxBinding
     private lateinit var authHelper: FBAuthHelper
     private lateinit var firestoreHelper: FBStoreHelper
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        binding = FragmentChatOfUsersBinding.inflate(layoutInflater, container, false)
+        binding = FragmentInboxBinding.inflate(layoutInflater, container, false)
         setHelpers()
         setListeners()
         getToken()
@@ -42,11 +45,13 @@ class ChatOfUsersFragment : Fragment(), IFBAuthListener,IFirestoreListener, View
 
     private fun setListeners()
     {
-        binding.fabNewChat.setOnClickListener{
-            Toast.makeText(requireContext(), "floating action button clicked", Toast.LENGTH_SHORT).show()
-            val action = ChatOfUsersFragmentDirections.actionChatFragmentToUsersFragment()
-            Navigation.findNavController(it).navigate(action)
-        }
+//        binding.fabNewChat.setOnClickListener{
+//            Toast.makeText(requireContext(), "floating action button clicked", Toast.LENGTH_SHORT).show()
+//            val action = ChatOfUsersFragmentDirections.actionChatFragmentToUsersFragment()
+//            Navigation.findNavController(it).navigate(action)
+//        }
+        binding.fabNewChat.setOnClickListener(this)
+        binding.imvImageSignout.setOnClickListener(this)
     }
 
     private fun setHelpers()
@@ -73,9 +78,23 @@ class ChatOfUsersFragment : Fragment(), IFBAuthListener,IFirestoreListener, View
         {
             R.id.fabNewChat ->
             {
-//                val action = ShowAllChatFragmentDirections.actionChatFragmentToUsersFragment()
-//                Navigation.findNavController(binding.root).navigate(action)
+                val action = InboxFragmentDirections.actionChatFragmentToUsersFragment()
+                Navigation.findNavController(v).navigate(action)
             }
+
+            R.id.imvImageSignout ->
+            {
+                signOut()
+            }
+        }
+    }
+
+    private fun signOut()
+    {
+        ChatApplication.fbAuth.signOut()
+        MainActivity.mActivity.apply {
+            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
         }
     }
 

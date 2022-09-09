@@ -32,11 +32,11 @@ class MainActivity : AppCompatActivity(), IFirestoreListener
     }
 
     override fun onUserInteraction()
-    {      super.onUserInteraction()
+    {
+        super.onUserInteraction()
         Handler(Looper.myLooper()!!).postDelayed({
 
         }, 1000)
-
         this.showToastMessage("I am clicked")
     }
 

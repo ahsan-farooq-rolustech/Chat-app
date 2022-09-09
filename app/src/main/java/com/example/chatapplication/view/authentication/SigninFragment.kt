@@ -1,5 +1,6 @@
 package com.example.chatapplication.view.authentication
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -15,6 +16,7 @@ import com.example.chatapplication.R
 import com.example.chatapplication.databinding.FragmentSigninBinding
 import com.example.chatapplication.utilities.helperClasses.*
 import com.example.chatapplication.utilities.utils.*
+import com.example.chatapplication.view.MainActivity
 import com.example.chatapplication.viewmodel.AuthViewModel
 
 
@@ -172,8 +174,9 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         isLoading(false)
         //TODO:show a proper mesage
         requireContext().showToastMessage("login success")
-        val action = SignInFragmentDirections.actionSigninFragmentFragmentToShowAllChatFragment()
-        Navigation.findNavController(binding.root).navigate(action)
+        AuthActivity.mAuthActivity.apply {
+            startActivity(Intent(this,MainActivity::class.java))
+        }
     }
 
     override fun onCompleteRegistration()
@@ -215,6 +218,8 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     override fun onImageUriResult(uri: List<Uri>, isSingle: Boolean)
     {
         userImage=uri[0]
+        binding.imvProfile.setImageURI(userImage)
+
     }
 
     private fun selectSignUpMode()
@@ -255,7 +260,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
     {
-        
+
     }
 
     override fun afterTextChanged(s: Editable?)

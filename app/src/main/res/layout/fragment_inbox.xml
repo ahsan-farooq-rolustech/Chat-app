@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/primary"
-    tools:context=".view.chat.ChatOfUsersFragment">
+    tools:context=".view.chat.InboxFragment">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivImageProfile"
@@ -22,7 +22,7 @@
         app:riv_corner_radius="@dimen/_8sdp" />
 
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/imvImageSignout"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
@@ -32,9 +32,9 @@
         android:background="@drawable/background_icon"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/ic_logout"
-        android:tint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
 
     <TextView
         android:id="@+id/tvName"
@@ -74,5 +74,5 @@
         android:backgroundTint="@color/primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:tint="@color/white"/>
+        android:tint="@color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>
