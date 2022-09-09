@@ -16,7 +16,7 @@ import com.example.chatapplication.utilities.utils.FBConstants
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.utilities.utils.getBitmapFromEncodedString
 import com.example.chatapplication.utilities.utils.getReadableFormat
-import com.example.chatapplication.view.chat.adapter.ChatAdapter
+import com.example.chatapplication.view.chat.adapter.MessagesAdapter
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -30,7 +30,7 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
     private lateinit var receivedUserResponse: UserResponse
     private val args: MessagesFragmentArgs by navArgs<MessagesFragmentArgs>()
     private lateinit var chatMessageResponseList: ArrayList<ChatMessageResponse>
-    private lateinit var chatAdapter: ChatAdapter
+    private lateinit var messagesAdapter: MessagesAdapter
     private lateinit var firestoreHelper: FBStoreHelper
     private var userId: String? = null
 
@@ -60,8 +60,8 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
     private fun setAdapter(userId: String)
     {
         chatMessageResponseList = ArrayList()
-        chatAdapter = ChatAdapter(chatMessageResponseList, receivedUserResponse.image.getBitmapFromEncodedString(), userId)
-        binding.rvChat.adapter = chatAdapter
+        messagesAdapter = MessagesAdapter(chatMessageResponseList, receivedUserResponse.image.getBitmapFromEncodedString(), userId)
+        binding.rvChat.adapter = messagesAdapter
     }
 
     private fun sendMessage()
@@ -142,11 +142,11 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
             }
             if (count == 0)
             {
-                chatAdapter.notifyDataSetChanged()
+                messagesAdapter.notifyDataSetChanged()
             }
             else
             {
-                chatAdapter.notifyItemRangeInserted(chatMessageResponseList.size, chatMessageResponseList.size)
+                messagesAdapter.notifyItemRangeInserted(chatMessageResponseList.size, chatMessageResponseList.size)
                 binding.rvChat.smoothScrollToPosition(chatMessageResponseList.size - 1)
             }
             binding.rvChat.visibility = View.VISIBLE

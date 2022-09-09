@@ -10,7 +10,7 @@ import androidx.navigation.Navigation
 import com.example.chatapplication.R
 import com.example.chatapplication.data.response.UserResponse
 import com.example.chatapplication.databinding.FragmentUsersBinding
-import com.example.chatapplication.view.chat.adapter.UserChatAdapter
+import com.example.chatapplication.view.chat.adapter.UserAdapter
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
 import com.example.chatapplication.utilities.utils.AppAlerts
 import com.example.chatapplication.utilities.utils.IFirestoreListener
@@ -52,7 +52,7 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
 //    }
     private lateinit var binding: FragmentUsersBinding
     private lateinit var firestoreHelper:FBStoreHelper
-    private lateinit var adapter:UserChatAdapter
+    private lateinit var adapter:UserAdapter
     private lateinit var usersList:ArrayList<UserResponse>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -127,7 +127,7 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
     private fun setAdapter(userResponses: ArrayList<UserResponse>)
     {
         usersList=userResponses
-        adapter= UserChatAdapter(MainActivity.mActivity,usersList)
+        adapter= UserAdapter(MainActivity.mActivity,usersList)
         adapter.setListener(this)
         binding.rvUsers.adapter=adapter
         adapter.notifyDataSetChanged()

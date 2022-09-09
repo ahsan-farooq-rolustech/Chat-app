@@ -8,7 +8,7 @@ import com.example.chatapplication.data.response.ChatMessageResponse
 import com.example.chatapplication.databinding.AdapterReceiveMessageBinding
 import com.example.chatapplication.databinding.AdapterSendMessageBinding
 
-class ChatAdapter(private val chatMessageResponses: List<ChatMessageResponse>, private val receivedImageProfileImage: Bitmap?, private val senderId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
+class MessagesAdapter(private val chatMessageResponses: List<ChatMessageResponse>, private val receivedImageProfileImage: Bitmap?, private val senderId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
     companion object
     {
@@ -18,24 +18,24 @@ class ChatAdapter(private val chatMessageResponses: List<ChatMessageResponse>, p
 
 
     class SentMessageViewHolder(val binding: AdapterSendMessageBinding) : RecyclerView.ViewHolder(binding.root)
-    {
-        fun setData(chatMessageResponse: ChatMessageResponse)
-        {
-            binding.tvMessage.text = chatMessageResponse.message
-            binding.tvDateTime.text = chatMessageResponse.dateTime
-        }
-
-    }
+//    {
+//        fun setData(chatMessageResponse: ChatMessageResponse)
+//        {
+//            binding.tvMessage.text = chatMessageResponse.message
+//            binding.tvDateTime.text = chatMessageResponse.dateTime
+//        }
+//
+//    }
 
     class ReceivedMessageViewHolder(val binding: AdapterReceiveMessageBinding) : RecyclerView.ViewHolder(binding.root)
-    {
-        fun setData(chatMessageResponse: ChatMessageResponse, receiverImage: Bitmap?)
-        {
-            binding.tvMessage.text = chatMessageResponse.message
-            binding.tvDateTime.text = chatMessageResponse.dateTime
-            if (receiverImage != null) binding.imvProfile.setImageBitmap(receiverImage)
-        }
-    }
+//    {
+//        fun setData(chatMessageResponse: ChatMessageResponse, receiverImage: Bitmap?)
+//        {
+//            binding.tvMessage.text = chatMessageResponse.message
+//            binding.tvDateTime.text = chatMessageResponse.dateTime
+//            if (receiverImage != null) binding.imvProfile.setImageBitmap(receiverImage)
+//        }
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
     {
@@ -53,11 +53,14 @@ class ChatAdapter(private val chatMessageResponses: List<ChatMessageResponse>, p
     {
         if (getItemViewType(position) == VIEW_TYPE_SENT)
         {
-            (holder as SentMessageViewHolder).setData(chatMessageResponses[position])
+            (holder as SentMessageViewHolder).binding.chatModel=chatMessageResponses[position]
         }
         else
         {
-            (holder as ReceivedMessageViewHolder).setData(chatMessageResponses[position], receivedImageProfileImage)
+            (holder as ReceivedMessageViewHolder).apply {
+                binding.chatModel=chatMessageResponses[0]
+                binding.profileImage=receivedImageProfileImage
+            }
         }
     }
 

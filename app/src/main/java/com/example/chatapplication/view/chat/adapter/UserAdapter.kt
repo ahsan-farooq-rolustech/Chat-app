@@ -12,7 +12,7 @@ import com.example.chatapplication.databinding.AdapterUserBinding
 import com.example.chatapplication.utilities.utils.IUserListener
 
 
-class UserChatAdapter(private val context: Context,private val userResponseList:ArrayList<com.example.chatapplication.data.response.UserResponse>) : RecyclerView.Adapter<UserChatAdapter.ViewHolder>()
+class UserAdapter(private val context: Context, private val userResponseList:ArrayList<com.example.chatapplication.data.response.UserResponse>) : RecyclerView.Adapter<UserAdapter.ViewHolder>()
 {
     private lateinit var mListener:IUserListener
 
@@ -24,11 +24,11 @@ class UserChatAdapter(private val context: Context,private val userResponseList:
         mListener=listener
     }
 
-    private fun getUserImage(encodedImage: String): Bitmap?
-    {
-        val bytes = Base64.decode(encodedImage, Base64.DEFAULT)
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-    }
+//    private fun getUserImage(encodedImage: String): Bitmap?
+//    {
+//        val bytes = Base64.decode(encodedImage, Base64.DEFAULT)
+//        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
