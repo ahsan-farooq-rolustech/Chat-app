@@ -13,10 +13,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import com.example.chatapplication.ChatApplication
+import com.example.chatapplication.utilities.utils.FBConstants
+import com.google.firebase.FirebaseApp
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.*
 
 
 class ImageHelper(mObject: Any, isActivity: Boolean) {
@@ -138,6 +142,17 @@ class ImageHelper(mObject: Any, isActivity: Boolean) {
 
         return imageUri
     }
+
+    fun uploadImageToStore(characterImage: Uri) {
+        val randomKey = UUID.randomUUID().toString()
+        val storageReference = ChatApplication.firebaseStorage.reference.child("${FBConstants.KEY_STORAGE_USER_IMAGES}${randomKey}")
+        storageReference.putFile(characterImage).addOnSuccessListener { task ->
+            storageReference.downloadUrl.addOnSuccessListener { uri ->
+
+            }
+        }.addOnProgressListener { uploadTask ->
+            // mListener.onImageUploadingProgress("${(100.00 * uploadTask.bytesTransferred / uploadTask.totalByteCount).toInt()}")
+        }
 }
 
 /**

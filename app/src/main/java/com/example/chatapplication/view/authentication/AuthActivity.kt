@@ -12,7 +12,7 @@ class AuthActivity : AppCompatActivity()
 {
     companion object
     {
-        lateinit var mAuthActivity:Activity
+        lateinit var mActivity:Activity
     }
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -25,6 +25,6 @@ class AuthActivity : AppCompatActivity()
         }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
-        mAuthActivity=this
+        mActivity=this
     }
 }

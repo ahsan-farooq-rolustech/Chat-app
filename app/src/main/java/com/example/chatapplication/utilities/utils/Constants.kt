@@ -19,6 +19,7 @@ object FBConstants
     const val KEY_COLLECTION_CONVERSATIONS="conversations"
     const val KEY_USER1="user1"
     const val KEY_USER2="user2"
+    const val KEY_STORAGE_USER_IMAGES="user images"
     const val KEY_SENDER_NAME="senderName"
     const val KEY_RECEIVER_NAME="receiverName"
     const val KEY_SENDER_IMAGE="senderImage"
@@ -30,10 +31,11 @@ object AppAlerts
 {
     const val NO_USER_AVALABLE = "No users available"
     const val NO_USER_EXCEPTION = "com.google.firebase.auth.FirebaseAuthInvalidUserException: There is no user record corresponding to this identifier. The user may have been deleted."
-
     const val INCORRECT_EMAIL = "Incorrect Email"
     const val PASSWORD_LENGTH_SHORT = "Length must be greater than 5"
     const val PASSWORD_DONOT_MATCH = "Donot match"
+    const val FIRST_NAME_ERROR="First name cannot be empty"
+    const val LAST_NAME_ERROR="Last name cannot be empty"
 }
 
 object ValidationConstants

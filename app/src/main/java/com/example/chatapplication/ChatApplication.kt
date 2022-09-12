@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
 class ChatApplication : Application(),LifecycleEventObserver
 {
@@ -12,6 +13,7 @@ class ChatApplication : Application(),LifecycleEventObserver
     {
         lateinit var fbAuth: FirebaseAuth
         lateinit var firestore:FirebaseFirestore
+        lateinit var firebaseStorage:FirebaseStorage
     }
 
     override fun onCreate()
@@ -26,6 +28,7 @@ class ChatApplication : Application(),LifecycleEventObserver
     {
         fbAuth = FirebaseAuth.getInstance()
         firestore=FirebaseFirestore.getInstance()
+        firebaseStorage=FirebaseStorage.getInstance()
     }
 
     override fun onTerminate()
