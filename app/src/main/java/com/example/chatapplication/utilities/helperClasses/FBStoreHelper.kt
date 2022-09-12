@@ -1,5 +1,7 @@
 package com.example.chatapplication.utilities.helperClasses
 
+import android.net.Uri
+import android.util.Log
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
 import com.example.chatapplication.data.responseModel.UserResponseModel
@@ -7,6 +9,9 @@ import com.example.chatapplication.utilities.utils.FBConstants
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.utilities.utils.getReadableFormat
 import com.google.firebase.firestore.EventListener
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class FBStoreHelper {
 
@@ -16,19 +21,45 @@ class FBStoreHelper {
         mListener = listener
     }
 
-    fun insertUser(email: String, firstName: String, lastName: String, imageUri: String) {
+    fun insertUser(email: String, firstName: String, lastName: String, imageUri: Uri) {
         val docRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).document(email)
         val userVal = HashMap<String, Any>()
         userVal[FBConstants.KEY_EMAIL] = email
         userVal[FBConstants.KEY_FIRST_NAME] = firstName
         userVal[FBConstants.KEY_LAST_NAME] = lastName
-        userVal[FBConstants.KEY_USER_IMAGE] = imageUri
+        userVal[FBConstants.KEY_USER_IMAGE] = ""
 
         //Successfully Inserted Listener, Failure listener can also be handled
         docRef.set(userVal).addOnSuccessListener {
             mListener.onUserInsertedSuccessfully()
+            uploadImageToStore(imageUri,email)
         }
 
+    }
+
+    fun uploadImageToStore(characterImage: Uri, email: String) {
+        val randomKey = UUID.randomUUID().toString()
+        val storageReference = ChatApplication.firebaseStorage.reference.child("${FBConstants.KEY_STORAGE_USER_IMAGES}${randomKey}")
+        storageReference.putFile(characterImage).addOnSuccessListener { task ->
+            storageReference.downloadUrl.addOnSuccessListener { uri ->
+                addUserImageLink(email,uri.toString())
+            }
+        }.addOnProgressListener { uploadTask ->
+            // mListener.onImageUploadingProgress("${(100.00 * uploadTask.bytesTransferred / uploadTask.totalByteCount).toInt()}")
+            Log.d("uploadImageToStore","${(100.00 * uploadTask.bytesTransferred / uploadTask.totalByteCount).toInt()}")
+        }.addOnFailureListener{
+            Log.d("uploadImageToStore", it.toString())
+        }
+    }
+
+    private fun addUserImageLink(email: String, uri: String) {
+        val data=HashMap<String,Any>()
+        data[FBConstants.KEY_USER_IMAGE]=uri
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).document(email).update(data).addOnSuccessListener {
+            Log.d("addUserImageLink","success")
+        }.addOnFailureListener{
+            Log.d("addUserImageLink","failure")
+        }
     }
 
     fun setStatus(status: Int) {

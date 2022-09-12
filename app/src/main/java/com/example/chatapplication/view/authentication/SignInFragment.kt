@@ -1,7 +1,6 @@
 package com.example.chatapplication.view.authentication
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -202,12 +201,8 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     }
 
     override fun onImageUriResult(uri: List<Uri>, isSingle: Boolean) {
-        val userImageUri = uri[0]
-        val inputStream = AuthActivity.mActivity.contentResolver.openInputStream(userImageUri)
-        val bitmap = BitmapFactory.decodeStream(inputStream)
-        this.userImage = bitmap
-        binding.imvProfile.setImageBitmap(this.userImage)
-
+        userImage = uri[0]
+        binding.imvProfile.setImageURI(userImage)
     }
 
     private fun selectSignUpMode() {

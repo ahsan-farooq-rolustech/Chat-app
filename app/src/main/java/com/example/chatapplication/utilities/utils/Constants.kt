@@ -19,7 +19,7 @@ object FBConstants
     const val KEY_COLLECTION_CONVERSATIONS="conversations"
     const val KEY_USER1="user1"
     const val KEY_USER2="user2"
-    const val KEY_STORAGE_USER_IMAGES="user images"
+    const val KEY_STORAGE_USER_IMAGES="user_images/"
     const val KEY_SENDER_NAME="senderName"
     const val KEY_RECEIVER_NAME="receiverName"
     const val KEY_SENDER_IMAGE="senderImage"
