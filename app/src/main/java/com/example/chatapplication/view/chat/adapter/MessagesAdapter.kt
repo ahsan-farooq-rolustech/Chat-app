@@ -4,11 +4,11 @@ import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chatapplication.data.response.ChatMessageResponse
+import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
 import com.example.chatapplication.databinding.AdapterReceiveMessageBinding
 import com.example.chatapplication.databinding.AdapterSendMessageBinding
 
-class MessagesAdapter(private val chatMessageResponses: List<ChatMessageResponse>, private val receivedImageProfileImage: Bitmap?, private val senderId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
+class MessagesAdapter(private val chatMessageResponsModels: List<ChatMessageResponseModel>, private val receivedImageProfileImage: Bitmap?, private val senderId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
     companion object
     {
@@ -19,7 +19,7 @@ class MessagesAdapter(private val chatMessageResponses: List<ChatMessageResponse
 
     class SentMessageViewHolder(val binding: AdapterSendMessageBinding) : RecyclerView.ViewHolder(binding.root)
 //    {
-//        fun setData(chatMessageResponse: ChatMessageResponse)
+//        fun setData(chatMessageResponse: ChatMessageResponseModel)
 //        {
 //            binding.tvMessage.text = chatMessageResponse.message
 //            binding.tvDateTime.text = chatMessageResponse.dateTime
@@ -29,7 +29,7 @@ class MessagesAdapter(private val chatMessageResponses: List<ChatMessageResponse
 
     class ReceivedMessageViewHolder(val binding: AdapterReceiveMessageBinding) : RecyclerView.ViewHolder(binding.root)
 //    {
-//        fun setData(chatMessageResponse: ChatMessageResponse, receiverImage: Bitmap?)
+//        fun setData(chatMessageResponse: ChatMessageResponseModel, receiverImage: Bitmap?)
 //        {
 //            binding.tvMessage.text = chatMessageResponse.message
 //            binding.tvDateTime.text = chatMessageResponse.dateTime
@@ -53,12 +53,12 @@ class MessagesAdapter(private val chatMessageResponses: List<ChatMessageResponse
     {
         if (getItemViewType(position) == VIEW_TYPE_SENT)
         {
-            (holder as SentMessageViewHolder).binding.chatModel=chatMessageResponses[position]
+            (holder as SentMessageViewHolder).binding.chatModel=chatMessageResponsModels[position]
         }
         else
         {
             (holder as ReceivedMessageViewHolder).apply {
-                binding.chatModel=chatMessageResponses[0]
+                binding.chatModel=chatMessageResponsModels[0]
                 binding.profileImage=receivedImageProfileImage
             }
         }
@@ -66,12 +66,12 @@ class MessagesAdapter(private val chatMessageResponses: List<ChatMessageResponse
 
     override fun getItemCount(): Int
     {
-        return chatMessageResponses.size
+        return chatMessageResponsModels.size
     }
 
     override fun getItemViewType(position: Int): Int
     {
-        if (chatMessageResponses[position].senderId.equals(senderId))
+        if (chatMessageResponsModels[position].senderId.equals(senderId))
         {
             return VIEW_TYPE_SENT
         }

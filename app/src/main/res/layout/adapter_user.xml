@@ -5,7 +5,7 @@
     <data>
         <variable
             name="model"
-            type="com.example.chatapplication.data.response.UserResponse" />
+            type="com.example.chatapplication.data.responseModel.UserResponseModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,6 +1,6 @@
 package com.example.chatapplication;
 
-import com.example.chatapplication.data.response.ChatMessageResponse;
+import com.example.chatapplication.data.responseModel.ChatMessageResponseModel;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Testing
 {
-    private List<ChatMessageResponse>list=new ArrayList<ChatMessageResponse>();
+    private List<ChatMessageResponseModel>list=new ArrayList<ChatMessageResponseModel>();
     private final EventListener<QuerySnapshot> eventListener = (value, error) ->
     {
       if(error !=null)

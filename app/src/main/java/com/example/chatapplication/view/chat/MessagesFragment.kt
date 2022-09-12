@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.R
-import com.example.chatapplication.data.response.ChatMessageResponse
-import com.example.chatapplication.data.response.UserResponse
+import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
+import com.example.chatapplication.data.responseModel.UserResponseModel
 import com.example.chatapplication.databinding.FragmentMessagesBinding
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
 import com.example.chatapplication.utilities.utils.FBConstants
@@ -17,6 +17,7 @@ import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.utilities.utils.getBitmapFromEncodedString
 import com.example.chatapplication.utilities.utils.getReadableFormat
 import com.example.chatapplication.view.chat.adapter.MessagesAdapter
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -27,12 +28,13 @@ import java.util.*
 class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
 {
     private lateinit var binding: FragmentMessagesBinding
-    private lateinit var receivedUserResponse: UserResponse
+    private lateinit var receivedUserResponseModel: UserResponseModel
     private val args: MessagesFragmentArgs by navArgs<MessagesFragmentArgs>()
-    private lateinit var chatMessageResponseList: ArrayList<ChatMessageResponse>
+    private lateinit var chatMessageResponseModelList: ArrayList<ChatMessageResponseModel>
     private lateinit var messagesAdapter: MessagesAdapter
     private lateinit var firestoreHelper: FBStoreHelper
     private var userId: String? = null
+    private var conversationId:String?=null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -59,8 +61,8 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
 
     private fun setAdapter(userId: String)
     {
-        chatMessageResponseList = ArrayList()
-        messagesAdapter = MessagesAdapter(chatMessageResponseList, receivedUserResponse.image.getBitmapFromEncodedString(), userId)
+        chatMessageResponseModelList = ArrayList()
+        messagesAdapter = MessagesAdapter(chatMessageResponseModelList, receivedUserResponseModel.image.getBitmapFromEncodedString(), userId)
         binding.rvChat.adapter = messagesAdapter
     }
 
@@ -68,7 +70,7 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
     {
         val message = HashMap<String, Any>()
         message[FBConstants.KEY_SENDER_ID] = userId!!
-        message[FBConstants.KEY_RECEIVER_ID] = receivedUserResponse.email
+        message[FBConstants.KEY_RECEIVER_ID] = receivedUserResponseModel.email
         message[FBConstants.KEY_MESSAGE] = binding.etInputMessage.text.toString()
         message[FBConstants.KEY_TIMESTAMP] = Date()
         firestoreHelper.uploadMessage(message)
@@ -91,8 +93,8 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
 
     private fun loadReceiverDetails()
     {
-        receivedUserResponse = args.userResponse
-        binding.tvName.text = receivedUserResponse.name
+        receivedUserResponseModel = args.userResponseModel
+        binding.tvName.text = receivedUserResponseModel.name
     }
 
     override fun onClick(v: View?)
@@ -119,25 +121,25 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
         }
         if (value != null)
         {
-            val count = chatMessageResponseList.size
+            val count = chatMessageResponseModelList.size
             for (documentChange in value.documentChanges)
             {
                 if (documentChange.type == DocumentChange.Type.ADDED)
                 {
-                    val chatMessageResponse = ChatMessageResponse(
+                    val chatMessageResponseModel = ChatMessageResponseModel(
                         senderId = documentChange.document.getString(FBConstants.KEY_SENDER_ID) ?: "",
                         receiverId = documentChange.document.getString(FBConstants.KEY_RECEIVER_ID) ?: "",
                         message = documentChange.document.getString(FBConstants.KEY_MESSAGE) ?: "",
                         dateTime = documentChange.document.getDate(FBConstants.KEY_TIMESTAMP)?.getReadableFormat() ?: "",
                         dateObj = documentChange.document.getDate(FBConstants.KEY_TIMESTAMP)
                     )
-                    chatMessageResponseList.add(chatMessageResponse)
+                    chatMessageResponseModelList.add(chatMessageResponseModel)
                 }
             }
 
             //TODO:Chats are not sorted by date, find how to sort them by date. The below line of code supposed to sort them by date
-            //chatMessageResponseList.sortWith(Comparator { (_, _, _, _, dateObj): ChatMessageResponse, (_, _, _, _, dateObj1): ChatMessageResponse -> dateObj!!.compareTo(dateObj1) })
-            chatMessageResponseList.sortBy {
+            //chatMessageResponseModelList.sortWith(Comparator { (_, _, _, _, dateObj): ChatMessageResponseModel, (_, _, _, _, dateObj1): ChatMessageResponseModel -> dateObj!!.compareTo(dateObj1) })
+            chatMessageResponseModelList.sortBy {
                 it.dateObj
             }
             if (count == 0)
@@ -146,8 +148,8 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
             }
             else
             {
-                messagesAdapter.notifyItemRangeInserted(chatMessageResponseList.size, chatMessageResponseList.size)
-                binding.rvChat.smoothScrollToPosition(chatMessageResponseList.size - 1)
+                messagesAdapter.notifyItemRangeInserted(chatMessageResponseModelList.size, chatMessageResponseModelList.size)
+                binding.rvChat.smoothScrollToPosition(chatMessageResponseModelList.size - 1)
             }
             binding.rvChat.visibility = View.VISIBLE
         }
@@ -158,12 +160,43 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener
     {
         ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CHAT)
             .whereEqualTo(FBConstants.KEY_SENDER_ID, userId)
-            .whereEqualTo(FBConstants.KEY_RECEIVER_ID, receivedUserResponse.id)
+            .whereEqualTo(FBConstants.KEY_RECEIVER_ID, receivedUserResponseModel.id)
             .addSnapshotListener(eventListener)
         ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CHAT)
-            .whereEqualTo(FBConstants.KEY_SENDER_ID, receivedUserResponse.id)
+            .whereEqualTo(FBConstants.KEY_SENDER_ID, receivedUserResponseModel.id)
             .whereEqualTo(FBConstants.KEY_RECEIVER_ID, userId)
             .addSnapshotListener(eventListener)
+    }
+
+    private fun checkForConversation()
+    {
+        val userEmail=ChatApplication.fbAuth.currentUser?.email
+        if(userEmail!=null)
+        {
+            if(chatMessageResponseModelList.size!=0)
+            {
+                checkForConversationRemotely(userEmail,receivedUserResponseModel.id)
+                checkForConversationRemotely(receivedUserResponseModel.id,userEmail)
+            }
+        }
+
+    }
+
+
+    private fun checkForConversationRemotely(senderId:String,receiverId:String)
+    {
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).whereEqualTo(FBConstants.KEY_SENDER_ID,senderId)
+            .whereEqualTo(FBConstants.KEY_RECEIVER_ID,receiverId)
+            .get()
+            .addOnCompleteListener(conversationOnCompleteListinner)
+    }
+
+    private val conversationOnCompleteListinner=OnCompleteListener<QuerySnapshot>{ task ->
+        if(task.isSuccessful&& task.result.documents.size>0)
+        {
+            val documentSnapshot=task.result.documents[0]
+            conversationId=documentSnapshot.id
+        }
     }
 
 

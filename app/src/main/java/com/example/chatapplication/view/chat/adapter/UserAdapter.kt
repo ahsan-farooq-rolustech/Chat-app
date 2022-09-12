@@ -1,9 +1,6 @@
 package com.example.chatapplication.view.chat.adapter
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +9,7 @@ import com.example.chatapplication.databinding.AdapterUserBinding
 import com.example.chatapplication.utilities.utils.IUserListener
 
 
-class UserAdapter(private val context: Context, private val userResponseList:ArrayList<com.example.chatapplication.data.response.UserResponse>) : RecyclerView.Adapter<UserAdapter.ViewHolder>()
+class UserAdapter(private val context: Context, private val userResponseModelList:ArrayList<com.example.chatapplication.data.responseModel.UserResponseModel>) : RecyclerView.Adapter<UserAdapter.ViewHolder>()
 {
     private lateinit var mListener:IUserListener
 
@@ -37,15 +34,15 @@ class UserAdapter(private val context: Context, private val userResponseList:Arr
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
-        holder.binding.model = userResponseList[position]
+        holder.binding.model = userResponseModelList[position]
         holder.binding.clMain.setOnClickListener{
-            mListener.onUserClicked(userResponseList[position])
+            mListener.onUserClicked(userResponseModelList[position])
         }
     }
 
     override fun getItemCount(): Int
     {
-        return userResponseList.size
+        return userResponseModelList.size
     }
 
 

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="chatModel"
-            type="com.example.chatapplication.data.response.ChatMessageResponse" />
+            type="com.example.chatapplication.data.responseModel.ChatMessageResponseModel" />
         <variable
             name="profileImage"
             type="android.graphics.Bitmap" />

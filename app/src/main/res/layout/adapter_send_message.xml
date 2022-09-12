@@ -5,7 +5,7 @@
 
         <variable
             name="ChatModel"
-            type="com.example.chatapplication.data.response.ChatMessageResponse" />
+            type="com.example.chatapplication.data.responseModel.ChatMessageResponseModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

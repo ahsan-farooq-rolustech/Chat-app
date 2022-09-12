@@ -1,54 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="@dimen/_8sdp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/imvImageProfile"
-        android:layout_width="@dimen/_35sdp"
-        android:layout_height="@dimen/_35sdp"
-        android:background="@drawable/background_image"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:riv_oval="true"/>
-    <View
-        android:id="@+id/vViewSupporter"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        app:layout_constraintBottom_toBottomOf="@id/imvImageProfile"
-        app:layout_constraintStart_toEndOf="@id/imvImageProfile"
-        app:layout_constraintTop_toTopOf="@id/imvImageProfile"/>
+    <data>
+        <variable
+            name="chatModel"
+            type="com.example.chatapplication.data.responseModel.ChatMessageResponseModel" />
+        <variable
+            name="conversationImage"
+            type="android.graphics.Bitmap" />
 
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="0dp"
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_8sdp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/primary_text"
-        android:textSize="@dimen/_13ssp"
-        android:text="Muhammad Ahsan Farooq"
-        app:layout_constraintBottom_toTopOf="@+id/vViewSupporter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imvImageProfile"/>
+        android:padding="@dimen/_8sdp">
 
-    <TextView
-        android:id="@+id/tvRecentMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_8sdp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="ahsan.farooq@rolustech.net"
-        android:textColor="@color/secondary_text"
-        android:textSize="@dimen/_12ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imvImageProfile"
-        app:layout_constraintTop_toBottomOf="@id/vViewSupporter"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imvImageProfile"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:background="@drawable/background_image"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_oval="true"
+            setImage="@{conversationImage}" />
+
+        <View
+            android:id="@+id/vViewSupporter"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@id/imvImageProfile"
+            app:layout_constraintStart_toEndOf="@id/imvImageProfile"
+            app:layout_constraintTop_toTopOf="@id/imvImageProfile" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{chatModel.conversationName}"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintBottom_toTopOf="@+id/vViewSupporter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imvImageProfile" />
+
+        <TextView
+            android:id="@+id/tvRecentMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{chatModel.conversationId}"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imvImageProfile"
+            app:layout_constraintTop_toBottomOf="@id/vViewSupporter" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,7 +1,7 @@
 package com.example.chatapplication.utilities.helperClasses
 
 import com.example.chatapplication.ChatApplication
-import com.example.chatapplication.data.response.UserResponse
+import com.example.chatapplication.data.responseModel.UserResponseModel
 import com.example.chatapplication.utilities.utils.FBConstants
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.google.firebase.firestore.EventListener
@@ -87,7 +87,7 @@ class FBStoreHelper
 //
 //            if (value != null)
 //            {
-//                val userResponses=ArrayList<UserResponse>()
+//                val userResponses=ArrayList<UserResponseModel>()
 //                for(documentChanges in value.documents)
 //                {
 //                    if(documentChanges.id==userEmail)
@@ -95,7 +95,7 @@ class FBStoreHelper
 //                        continue
 //                    }
 //
-//                    val userResponse=UserResponse(
+//                    val userResponse=UserResponseModel(
 //                        email = documentChanges.getString(FBConstants.KEY_EMAIL)?:"",
 //                        token = documentChanges.getString(FBConstants.KEY_FCM_TOKEN)?:"",
 //                        name = documentChanges.getString(FBConstants.KEY_FIRST_NAME)?:"",
@@ -119,7 +119,7 @@ class FBStoreHelper
         ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).get().addOnCompleteListener { task ->
             if (task.isSuccessful && task.result != null)
             {
-                val userResponses = ArrayList<UserResponse>()
+                val userResponsModels = ArrayList<UserResponseModel>()
                 for (documentSnapShot in task.result)
                 {
                     if (documentSnapShot.id == userEmail)
@@ -127,14 +127,14 @@ class FBStoreHelper
                         continue
                     }
 
-                    val userResponse = UserResponse(
+                    val userResponseModel = UserResponseModel(
                         email = documentSnapShot.getString(FBConstants.KEY_EMAIL) ?: "", token = documentSnapShot.getString(FBConstants.KEY_FCM_TOKEN) ?: "", name = documentSnapShot.getString(FBConstants.KEY_FIRST_NAME) ?: "", image = if (documentSnapShot.getString(FBConstants.KEY_USER_IMAGE) != null) documentSnapShot.getString(FBConstants.KEY_USER_IMAGE)!! else "", status = if (documentSnapShot.get(FBConstants.KEY_STATUS) != null) documentSnapShot.get(FBConstants.KEY_STATUS)!!.toString().toInt() else 0
                     )
-                    userResponses.add(userResponse)
+                    userResponsModels.add(userResponseModel)
                 }
-                if (userResponses.size > 0)
+                if (userResponsModels.size > 0)
                 {
-                    mListener.onUserGetSuccessfully(userResponses)
+                    mListener.onUserGetSuccessfully(userResponsModels)
                 }
                 else
                 {
@@ -160,7 +160,7 @@ class FBStoreHelper
 
             if (value != null)
             {
-                val userResponses = ArrayList<UserResponse>()
+                val userResponsModels = ArrayList<UserResponseModel>()
                 for (documentChanges in value.documents)
                 {
                     if (documentChanges.id == userEmail)
@@ -168,14 +168,14 @@ class FBStoreHelper
                         continue
                     }
 
-                    val userResponse = UserResponse(
+                    val userResponseModel = UserResponseModel(
                         email = documentChanges.getString(FBConstants.KEY_EMAIL) ?: "", token = documentChanges.getString(FBConstants.KEY_FCM_TOKEN) ?: "", name = documentChanges.getString(FBConstants.KEY_FIRST_NAME) ?: "", image = if (documentChanges.getString(FBConstants.KEY_USER_IMAGE) != null) documentChanges.getString(FBConstants.KEY_USER_IMAGE)!! else "", status = if (documentChanges.get(FBConstants.KEY_STATUS) != null) documentChanges.get(FBConstants.KEY_STATUS)!!.toString().toInt() else 0
                     )
-                    userResponses.add(userResponse)
+                    userResponsModels.add(userResponseModel)
                 }
-                if (userResponses.size > 0)
+                if (userResponsModels.size > 0)
                 {
-                    mListener.onGetUserChangesSuccessful(userResponses)
+                    mListener.onGetUserChangesSuccessful(userResponsModels)
                 }
 //                else
 //                {
@@ -193,7 +193,7 @@ class FBStoreHelper
 
 //    fun getUserProfile() {
 //        val docRef = FirebaseApp.fbStore.collection(FBConstants.TABLE_USERS).document(FirebaseApp.fbAuth.currentUser!!.uid)
-//        val user = UserResponse()
+//        val user = UserResponseModel()
 //        user.id = FirebaseApp.fbAuth.currentUser!!.uid
 //
 //        /*docRef.get().addOnSuccessListener{

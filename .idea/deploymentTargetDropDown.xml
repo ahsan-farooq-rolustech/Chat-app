@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
+    <multipleDevicesSelectedInDropDown value="true" />
     <runningDeviceTargetsSelectedWithDialog>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="SERIAL_NUMBER" />
-            <value value="9e967a22" />
+            <type value="VIRTUAL_DEVICE_PATH" />
+            <value value="C:\Users\ahsan.farooq\.android\avd\Pixel_5_API_31.avd" />
           </Key>
         </deviceKey>
       </Target>
@@ -15,8 +16,8 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\ahsan.farooq\.android\avd\Pixel_5_API_31.avd" />
+            <type value="SERIAL_NUMBER" />
+            <value value="R58R30CYWMF" />
           </Key>
         </deviceKey>
       </Target>

@@ -1,6 +1,6 @@
 package com.example.chatapplication.utilities.utils
 
-import com.example.chatapplication.data.response.UserResponse
+import com.example.chatapplication.data.responseModel.UserResponseModel
 
 interface IFBAuthListener
 {
@@ -16,16 +16,16 @@ interface IFirestoreListener
     fun onUserDoesNotExists(){}
     fun onFirestoreError(error:String){}
     fun onUserInsertedSuccessfully(){}
-    fun onUserGetSuccessfully(userResponses: ArrayList<UserResponse>) {}
+    fun onUserGetSuccessfully(userResponsModels: ArrayList<UserResponseModel>) {}
     fun onUserEmpty(){}
     fun onUserGetFailure(error: String){}
     fun onStatusChangedSuccess(){}
-    fun onGetUserChangesSuccessful(userResponses: ArrayList<UserResponse>){}
+    fun onGetUserChangesSuccessful(userResponsModels: ArrayList<UserResponseModel>){}
 }
 
 
 interface IUserListener
 {
-    fun onUserClicked(userResponse:UserResponse){}
+    fun onUserClicked(userResponseModel:UserResponseModel){}
 }
 

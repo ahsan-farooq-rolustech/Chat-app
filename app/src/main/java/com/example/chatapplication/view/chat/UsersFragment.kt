@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import com.example.chatapplication.R
-import com.example.chatapplication.data.response.UserResponse
+import com.example.chatapplication.data.responseModel.UserResponseModel
 import com.example.chatapplication.databinding.FragmentUsersBinding
 import com.example.chatapplication.view.chat.adapter.UserAdapter
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
@@ -53,7 +53,7 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
     private lateinit var binding: FragmentUsersBinding
     private lateinit var firestoreHelper:FBStoreHelper
     private lateinit var adapter:UserAdapter
-    private lateinit var usersList:ArrayList<UserResponse>
+    private lateinit var usersList:ArrayList<UserResponseModel>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -111,9 +111,9 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
     }
 
 
-    override fun onUserGetSuccessfully(userResponses: ArrayList<UserResponse>)
+    override fun onUserGetSuccessfully(userResponsModels: ArrayList<UserResponseModel>)
     {
-        setAdapter(userResponses)
+        setAdapter(userResponsModels)
         binding.rvUsers.visibility=View.VISIBLE
         loading(false)
         getChangesInUser()
@@ -124,9 +124,9 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
         firestoreHelper.getUserChanges()
     }
 
-    private fun setAdapter(userResponses: ArrayList<UserResponse>)
+    private fun setAdapter(userResponsModels: ArrayList<UserResponseModel>)
     {
-        usersList=userResponses
+        usersList=userResponsModels
         adapter= UserAdapter(MainActivity.mActivity,usersList)
         adapter.setListener(this)
         binding.rvUsers.adapter=adapter
@@ -143,16 +143,16 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
         Log.d("onUserGetFailure", error)
     }
 
-    override fun onUserClicked(userResponse: UserResponse)
+    override fun onUserClicked(userResponseModel: UserResponseModel)
     {
-        val action=UsersFragmentDirections.actionUsersFragmentToChatFragment(userResponse)
+        val action=UsersFragmentDirections.actionUsersFragmentToChatFragment(userResponseModel)
         Navigation.findNavController(binding.root).navigate(action)
     }
 
-    override fun onGetUserChangesSuccessful(userResponses: ArrayList<UserResponse>)
+    override fun onGetUserChangesSuccessful(userResponsModels: ArrayList<UserResponseModel>)
     {
-        userResponses.removeAll(usersList.toSet())
-        for( i in userResponses)
+        userResponsModels.removeAll(usersList.toSet())
+        for( i in userResponsModels)
         {
             for(j in 0 until usersList.size)
             {

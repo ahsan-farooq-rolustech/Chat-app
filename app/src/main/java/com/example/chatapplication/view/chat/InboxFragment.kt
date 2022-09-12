@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.R
+import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
 import com.example.chatapplication.databinding.FragmentInboxBinding
 import com.example.chatapplication.utilities.helperClasses.FBAuthHelper
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
@@ -17,6 +18,7 @@ import com.example.chatapplication.utilities.utils.IFBAuthListener
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.view.MainActivity
 import com.example.chatapplication.view.authentication.AuthActivity
+import com.example.chatapplication.view.chat.adapter.InboxAdapter
 import com.google.firebase.messaging.FirebaseMessaging
 
 
@@ -26,6 +28,8 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
     private lateinit var binding: FragmentInboxBinding
     private lateinit var authHelper: FBAuthHelper
     private lateinit var firestoreHelper: FBStoreHelper
+    private lateinit var conversations: ArrayList<ChatMessageResponseModel>
+    private lateinit var inboxAdapter: InboxAdapter
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -60,6 +64,13 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
         authHelper.setListener(this)
         firestoreHelper = FBStoreHelper()
         firestoreHelper.setListener(this)
+    }
+
+    private fun setAdapter(chatMessagesList: ArrayList<ChatMessageResponseModel>)
+    {
+        inboxAdapter = InboxAdapter(chatMessagesList)
+        binding.rvConversation.adapter = inboxAdapter
+        inboxAdapter.notifyDataSetChanged()
     }
 
     fun getToken()
