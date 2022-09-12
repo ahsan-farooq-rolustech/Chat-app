@@ -1,5 +1,6 @@
 package com.example.chatapplication.utilities.utils
 
+import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
 import com.example.chatapplication.data.responseModel.UserResponseModel
 
 interface IFBAuthListener
@@ -21,6 +22,10 @@ interface IFirestoreListener
     fun onUserGetFailure(error: String){}
     fun onStatusChangedSuccess(){}
     fun onGetUserChangesSuccessful(userResponsModels: ArrayList<UserResponseModel>){}
+    fun onChatCreatedSuccess(){}
+    fun onConversationGetSuccess(conversationId:String){}
+    fun onGetMessagesSuccessful(messagesList:ArrayList<ChatMessageResponseModel>){}
+
 }
 
 

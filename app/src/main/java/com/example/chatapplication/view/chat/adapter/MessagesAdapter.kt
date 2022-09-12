@@ -58,7 +58,7 @@ class MessagesAdapter(private val chatMessageResponsModels: List<ChatMessageResp
         else
         {
             (holder as ReceivedMessageViewHolder).apply {
-                binding.chatModel=chatMessageResponsModels[0]
+                binding.chatModel=chatMessageResponsModels[position]
                 binding.profileImage=receivedImageProfileImage
             }
         }

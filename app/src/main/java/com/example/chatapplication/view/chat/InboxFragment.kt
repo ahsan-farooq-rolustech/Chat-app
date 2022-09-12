@@ -109,7 +109,11 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
         }
     }
 
-//    override fun onPause()
+    override fun onChatCreatedSuccess() {
+        TODO("Not yet implemented")
+    }
+
+    //    override fun onPause()
 //    {
 //        super.onPause()
 //        firestoreHelper.setStatus(AppConstants.STATUS_IN_ACTIVE)

@@ -17,6 +17,8 @@ object FBConstants
     const val KEY_TIMESTAMP="timestamp"
     const val KEY_STATUS = "status"
     const val KEY_COLLECTION_CONVERSATIONS="conversations"
+    const val KEY_USER1="user1"
+    const val KEY_USER2="user2"
     const val KEY_SENDER_NAME="senderName"
     const val KEY_RECEIVER_NAME="receiverName"
     const val KEY_SENDER_IMAGE="senderImage"

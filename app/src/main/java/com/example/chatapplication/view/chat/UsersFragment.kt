@@ -166,5 +166,9 @@ class UsersFragment : Fragment(),View.OnClickListener,IFirestoreListener,IUserLi
         adapter.notifyDataSetChanged()
     }
 
+    override fun onChatCreatedSuccess() {
+        TODO("Not yet implemented")
+    }
+
 
 }
