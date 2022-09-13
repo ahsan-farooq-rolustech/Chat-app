@@ -36,15 +36,36 @@
             android:textSize="@dimen/_12ssp"
             android:textStyle="bold" />
 
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/imvProfile"
-            android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_80sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/background_image"
-            android:scaleType="centerCrop"
-            android:visibility="gone"
-            app:riv_oval="true" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
+
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/imvProfile"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:background="@drawable/background_image"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_oval="true" />
+            <ProgressBar
+                android:id="@+id/pbLoaderProfileImage"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/imvProfile"
+                app:layout_constraintEnd_toEndOf="@+id/imvProfile"
+                app:layout_constraintStart_toStartOf="@+id/imvProfile"
+                app:layout_constraintTop_toTopOf="@+id/imvProfile" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
@@ -153,7 +174,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="@string/procede"
+                    android:text="@string/proceed"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_13ssp"
                     android:textStyle="bold" />

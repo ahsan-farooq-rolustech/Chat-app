@@ -42,6 +42,7 @@ class FBStoreHelper {
         val storageReference = ChatApplication.firebaseStorage.reference.child("${FBConstants.KEY_STORAGE_USER_IMAGES}${randomKey}")
         storageReference.putFile(characterImage).addOnSuccessListener { task ->
             storageReference.downloadUrl.addOnSuccessListener { uri ->
+                mListener
                 addUserImageLink(email,uri.toString())
             }
         }.addOnProgressListener { uploadTask ->

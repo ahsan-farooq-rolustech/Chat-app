@@ -34,12 +34,6 @@ class CustomBindingAdapter {
         fun setImage(view: ImageView, imageUrl: String) {
             if (!TextUtils.isEmpty(imageUrl)) view.load(imageUrl)
         }
-
-        @JvmStatic
-        @BindingAdapter("setImage")
-        fun setImage(riv: RoundedImageView, image: Bitmap?) {
-            if (image != null) riv.setImageBitmap(image)
-        }
     }
 
 }

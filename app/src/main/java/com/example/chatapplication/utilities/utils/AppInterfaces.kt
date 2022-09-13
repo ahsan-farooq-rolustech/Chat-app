@@ -25,7 +25,7 @@ interface IFirestoreListener
     fun onChatCreatedSuccess(){}
     fun onConversationGetSuccess(conversationId:String){}
     fun onGetMessagesSuccessful(list:ArrayList<ChatMessageResponseModel>){}
-
+    fun onUserImageUploadedSuccessfully(){}
 }
 
 
