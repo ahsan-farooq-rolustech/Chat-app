@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="model"
             type="com.example.chatapplication.data.responseModel.UserResponseModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/clMain"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:padding="@dimen/_8sdp">
 
         <RelativeLayout
@@ -24,16 +23,19 @@
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/imvImageProfile"
+                loadImage="@{model.image}"
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
                 android:background="@drawable/background_image"
                 android:scaleType="centerCrop"
+                app:riv_border_color="@color/primary"
+                app:riv_border_width="0.7dp"
                 app:riv_oval="true" />
 
             <ImageView
+                setUserStatus="@{model.status}"
                 android:layout_width="@dimen/_10sdp"
                 android:layout_height="@dimen/_10sdp"
-                setUserStatus = "@{model.status}"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:src="@drawable/bg_round" />
@@ -46,7 +48,7 @@
             android:layout_height="1dp"
             app:layout_constraintBottom_toBottomOf="@id/rlUserImage"
             app:layout_constraintStart_toEndOf="@id/rlUserImage"
-            app:layout_constraintTop_toTopOf="@id/rlUserImage"/>
+            app:layout_constraintTop_toTopOf="@id/rlUserImage" />
 
         <TextView
             android:id="@+id/tvName"
@@ -56,12 +58,12 @@
             android:layout_marginEnd="@dimen/_8sdp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{model.name}"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_13ssp"
-            android:text="@{model.name}"
             app:layout_constraintBottom_toTopOf="@+id/vViewSupporter"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/rlUserImage"/>
+            app:layout_constraintStart_toEndOf="@id/rlUserImage" />
 
         <TextView
             android:id="@+id/tvEmail"
@@ -76,6 +78,6 @@
             android:textSize="@dimen/_10ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/rlUserImage"
-            app:layout_constraintTop_toBottomOf="@id/vViewSupporter"/>
+            app:layout_constraintTop_toBottomOf="@id/vViewSupporter" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
