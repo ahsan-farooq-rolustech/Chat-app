@@ -29,7 +29,6 @@ object FBConstants {
 object AppAlerts {
     const val EMPTY_MESSAGE = "Empty message"
     const val NO_USER_AVALABLE = "No users available"
-    const val NO_USER_EXCEPTION = "com.google.firebase.auth.FirebaseAuthInvalidUserException: There is no user record corresponding to this identifier. The user may have been deleted."
     const val INCORRECT_EMAIL = "Incorrect Email"
     const val PASSWORD_LENGTH_SHORT = "Length must be greater than 5"
     const val PASSWORD_DONOT_MATCH = "Donot match"
@@ -52,7 +51,6 @@ object AppConstants {
     const val MODE_INITIAL_STATE = 99
     const val MODE_SIGN_IN = 999
     const val MODE_SIGN_UP = 9999
-    const val KEY_USER = "user"
     const val STATUS_ACTIVE = 1
     const val STATUS_IN_ACTIVE = 2
     const val STATUS_OFFLINE = 3
