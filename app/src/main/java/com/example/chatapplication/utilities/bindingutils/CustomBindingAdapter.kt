@@ -3,6 +3,7 @@ package com.example.chatapplication.utilities.bindingutils
 import android.content.Context
 import android.graphics.Bitmap
 import android.text.TextUtils
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -27,6 +28,12 @@ class CustomBindingAdapter {
                 AppConstants.STATUS_OFFLINE -> iv.setColorFilter(ContextCompat.getColor(ActivityBase.activity, R.color.error))
                 else -> iv.setColorFilter(ContextCompat.getColor(ActivityBase.activity, R.color.error))
             }
+        }
+
+        @BindingAdapter("visibleGone")
+        @JvmStatic
+        fun showHide(view: View, show: Boolean) {
+            view.visibility = if (show) View.VISIBLE else View.GONE
         }
 
         @BindingAdapter("loadImage")

@@ -15,7 +15,6 @@ import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
 import com.example.chatapplication.utilities.utils.AppAlerts
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.utilities.utils.IUserListener
-import com.example.chatapplication.view.MainActivity
 import com.example.chatapplication.view.base.ActivityBase
 
 class UsersFragment : Fragment(), View.OnClickListener, IFirestoreListener, IUserListener {
@@ -133,9 +132,9 @@ class UsersFragment : Fragment(), View.OnClickListener, IFirestoreListener, IUse
         Navigation.findNavController(binding.root).navigate(action)
     }
 
-    override fun onGetUserChangesSuccessful(userResponsModels: ArrayList<UserResponseModel>) {
-        userResponsModels.removeAll(usersList.toSet())
-        for (i in userResponsModels) {
+    override fun onGetUserChangesSuccessful(userResponseModels: ArrayList<UserResponseModel>) {
+        userResponseModels.removeAll(usersList.toSet())
+        for (i in userResponseModels) {
             for (j in 0 until usersList.size) {
                 if (i.email == usersList[j].email) {
                     usersList[j] = i

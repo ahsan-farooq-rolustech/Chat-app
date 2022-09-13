@@ -3,8 +3,8 @@
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="teal_200">#1c2e46</color>
+    <color name="teal_700">#1c2e46</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
@@ -18,4 +18,5 @@
     <color name="received_messages_background">#090d16</color>
     <color name="green">#15E604</color>
     <color name="orange">#FFC107</color>
+    <color name="trans_black">#9A000000</color>
 </resources>

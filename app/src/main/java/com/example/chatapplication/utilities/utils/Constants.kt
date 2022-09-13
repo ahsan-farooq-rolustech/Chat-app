@@ -35,6 +35,11 @@ object AppAlerts {
     const val PASSWORD_DONOT_MATCH = "Donot match"
     const val FIRST_NAME_ERROR = "First name cannot be empty"
     const val LAST_NAME_ERROR = "Last name cannot be empty"
+    const val INSERT_USER_IMAGE="Please Insert User Image"
+    const val REGISTRATION_ERROR="Registration falied due to some error"
+    const val LOGIN_SUCCESS="Login Successful"
+    const val REGISTRATION_SUCCESS="Registration is successful"
+    const val USER_INSRTED_FIRESTORE="User successfully in Firestore"
 }
 
 object ValidationConstants {
@@ -44,9 +49,9 @@ object ValidationConstants {
 }
 
 object AppConstants {
-    const val USER_EXISTANCE_UNKNOWN = 99
-    const val USER_EXISTS = 999
-    const val USER_DOESNOT_EXISTS = 9999
+    const val MODE_INITIAL_STATE = 99
+    const val MODE_SIGN_IN = 999
+    const val MODE_SIGN_UP = 9999
     const val KEY_USER = "user"
     const val STATUS_ACTIVE = 1
     const val STATUS_IN_ACTIVE = 2

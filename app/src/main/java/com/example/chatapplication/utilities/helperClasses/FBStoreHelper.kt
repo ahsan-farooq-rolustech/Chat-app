@@ -23,34 +23,33 @@ class FBStoreHelper {
         mListener = listener
     }
 
-    fun insertUser(email: String, firstName: String, lastName: String, imageUri: Uri) {
+    fun insertUser(email: String, firstName: String, lastName: String, imageUrl: String) {
         val docRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).document(email)
         val userVal = HashMap<String, Any>()
         userVal[FBConstants.KEY_EMAIL] = email
         userVal[FBConstants.KEY_FIRST_NAME] = firstName
         userVal[FBConstants.KEY_LAST_NAME] = lastName
-        userVal[FBConstants.KEY_USER_IMAGE] = ""
+        userVal[FBConstants.KEY_USER_IMAGE] = imageUrl
 
         //Successfully Inserted Listener, Failure listener can also be handled
         docRef.set(userVal).addOnSuccessListener {
             mListener.onUserInsertedSuccessfully()
-            uploadImageToStore(imageUri,email)
         }
 
     }
 
-    fun uploadImageToStore(characterImage: Uri, email: String) {
+    fun uploadImageToStore(characterImage: Uri) {
         val randomKey = UUID.randomUUID().toString()
         val storageReference = ChatApplication.firebaseStorage.reference.child("${FBConstants.KEY_STORAGE_USER_IMAGES}${randomKey}")
         storageReference.putFile(characterImage).addOnSuccessListener { task ->
             storageReference.downloadUrl.addOnSuccessListener { uri ->
-                val imageURl = Firebase.storage.getReferenceFromUrl(uri.toString())
-                val imageReference=ChatApplication.firebaseStorage.getReferenceFromUrl(uri.toString())
-                addUserImageLink(email,uri.toString())
+                mListener.onUserImageUploadedSuccessfully(uri.toString())
+                //addUserImageLink(email,uri.toString())
             }
         }.addOnProgressListener { uploadTask ->
             // mListener.onImageUploadingProgress("${(100.00 * uploadTask.bytesTransferred / uploadTask.totalByteCount).toInt()}")
             Log.d("uploadImageToStore","${(100.00 * uploadTask.bytesTransferred / uploadTask.totalByteCount).toInt()}")
+            mListener.onUserImageUploadProgress((100.00 * uploadTask.bytesTransferred / uploadTask.totalByteCount).toInt())
         }.addOnFailureListener{
             Log.d("uploadImageToStore", it.toString())
         }

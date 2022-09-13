@@ -21,11 +21,12 @@ interface IFirestoreListener
     fun onUserEmpty(){}
     fun onUserGetFailure(error: String){}
     fun onStatusChangedSuccess(){}
-    fun onGetUserChangesSuccessful(userResponsModels: ArrayList<UserResponseModel>){}
+    fun onGetUserChangesSuccessful(userResponseModels: ArrayList<UserResponseModel>){}
     fun onChatCreatedSuccess(){}
     fun onConversationGetSuccess(conversationId:String){}
     fun onGetMessagesSuccessful(list:ArrayList<ChatMessageResponseModel>){}
-    fun onUserImageUploadedSuccessfully(){}
+    fun onUserImageUploadedSuccessfully(imageUrl:String){}
+    fun onUserImageUploadProgress(progress: Int){}
 }
 
 

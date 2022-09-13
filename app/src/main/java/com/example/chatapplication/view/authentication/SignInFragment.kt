@@ -1,7 +1,6 @@
 package com.example.chatapplication.view.authentication
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -13,7 +12,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.chatapplication.R
 import com.example.chatapplication.databinding.FragmentSigninBinding
-import com.example.chatapplication.utilities.helperClasses.*
+import com.example.chatapplication.utilities.helperClasses.FBAuthHelper
+import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
+import com.example.chatapplication.utilities.helperClasses.ImageHelper
 import com.example.chatapplication.utilities.utils.*
 import com.example.chatapplication.view.MainActivity
 import com.example.chatapplication.view.base.ActivityBase
@@ -24,7 +25,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     private lateinit var binding: FragmentSigninBinding
     private lateinit var authHelper: FBAuthHelper
     private lateinit var firestoreHelper: FBStoreHelper
-    private var isUserExist = AppConstants.USER_EXISTANCE_UNKNOWN
+    private var userStatus = AppConstants.MODE_INITIAL_STATE
     private lateinit var authViewModel: AuthViewModel
     private lateinit var email: String
     private lateinit var imageHelper: ImageHelper
@@ -35,21 +36,16 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View { // Inflate the layout for this fragment
         binding = FragmentSigninBinding.inflate(layoutInflater, container, false) //        setViewModel()
         setListeners()
-        setHelpers()
+        initThings()
         return binding.root
     }
 
-    //    private fun setViewModel()
-    //    {
-    //        val authRepository = AuthRepository(this)
-    //        authViewModel = ViewModelProvider(
-    //            this,
-    //            AuthViewModelFactory(requireActivity().application, authRepository)
-    //        ).get(AuthViewModel::class.java)
-    //    }
-
-    private fun setHelpers() {
-        authHelper = FBAuthHelper(requireContext())
+    private fun initThings() {
+        binding.progress = ""
+        binding.isSignUp = false
+        binding.isLogin = false
+        binding.isLoading = false
+        authHelper = FBAuthHelper(ActivityBase.activity)
         authHelper.setListener(this)
         firestoreHelper = FBStoreHelper()
         firestoreHelper.setListener(this)
@@ -77,103 +73,145 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     }
 
     private fun authenticate() {
-        isLoading()
+
+        binding.isLoading = true
         email = binding.etEmail.text.toString()
         val password = binding.etPasword.text.toString()
         val confirmPassword = binding.etConfirmPasword.text.toString()
         firstName = binding.etFirstName.text.toString()
         lastName = binding.etLastName.text.toString()
 
-
-        if (isUserExist == AppConstants.USER_EXISTANCE_UNKNOWN) {
-
-            if (Validators.validateEmail(email)) {
-                firestoreHelper.isUserExists(email)
-            } else {
-                binding.etEmail.error = AppAlerts.INCORRECT_EMAIL
-                isLoading(false)
+        when(userStatus)
+        {
+            AppConstants.MODE_INITIAL_STATE->{
+                checkUserExistance()
+            }
+            AppConstants.MODE_SIGN_IN->{
+                signIn(email,password)
+            }
+            AppConstants.MODE_SIGN_UP -> {
+                signUp(email,password,confirmPassword,firstName,lastName)
             }
         }
 
-        if (isUserExist == AppConstants.USER_DOESNOT_EXISTS) {
-            if (validateInputs(email, password, confirmPassword, firstName, lastName)) {
-                authHelper.authenticateUser(email, password, FBConstants.REGISTER)
-            }
-        }
-        if (isUserExist == AppConstants.USER_EXISTS) {
-            if (validateInputs(email, password, "")) {
-                authHelper.authenticateUser(email, password, FBConstants.LOGIN)
-            }
-        }
+
+//        if (userStatus == AppConstants.MODE_INITIAL_STATE) {
+//
+//            if (Validators.validateEmail(email)) {
+//                firestoreHelper.isUserExists(email)
+//            } else {
+//                binding.etEmail.error = AppAlerts.INCORRECT_EMAIL
+//                binding.isLoading = false
+//            }
+//        }
+//
+//        if (userStatus == AppConstants.MODE_SIGN_UP) {
+//            if (validateInputs(email, password, confirmPassword, firstName, lastName)) {
+//                authHelper.authenticateUser(email, password, FBConstants.REGISTER)
+//            }
+//        }
+//
+//        if (userStatus == AppConstants.MODE_SIGN_IN) {
+//            if (validateInputs(email, password, "")) {
+//                authHelper.authenticateUser(email, password, FBConstants.LOGIN)
+//            }
+//        }
 
     }
 
+    private fun signUp(email: String, password: String, confirmPassword: String, firstName: String, lastName: String) {
+        if (validateInputs(email, password, confirmPassword, this.firstName, this.lastName)) {
+            authHelper.authenticateUser(this.email, password, FBConstants.REGISTER)
+        }
+    }
+
+    private fun signIn(email: String, password: String) {
+        if (validateInputs(email, password, "")) {
+            authHelper.authenticateUser(this.email, password, FBConstants.LOGIN)
+        }
+    }
+
+    private fun checkUserExistance() {
+        if (Validators.validateEmail(email)) {
+            firestoreHelper.isUserExists(email)
+        } else {
+            binding.etEmail.error = AppAlerts.INCORRECT_EMAIL
+            binding.isLoading = false
+        }
+    }
+
     private fun validateInputs(email: String, password: String, confirmPassword: String, firstName: String = "-1", lastName: String = "-1"): Boolean {
-        if (isUserExist == AppConstants.USER_DOESNOT_EXISTS && !this::userImage.isInitialized) {
-            requireContext().showToastMessage("please select user image")
+        if (userStatus == AppConstants.MODE_SIGN_UP && !this::userImage.isInitialized) {
+            ActivityBase.activity.showToastMessage(AppAlerts.INSERT_USER_IMAGE)
             return false
 
         }
         if (!Validators.validateEmail(email)) {
             binding.etEmail.error = AppAlerts.INCORRECT_EMAIL
-            isLoading(false)
+            binding.isLoading = false
             return false
         }
 
         val validateResult = Validators.validatePassword(password, confirmPassword)
         if (validateResult == ValidationConstants.PASSWORD_LEN_ERROR) {
             binding.etPasword.error = AppAlerts.PASSWORD_LENGTH_SHORT
-            isLoading(false)
+            binding.isLoading = false
             return false
         }
 
         if (validateResult == ValidationConstants.PASSWORD_DONOT_MATCH) {
             binding.etPasword.error = AppAlerts.PASSWORD_DONOT_MATCH
             binding.etConfirmPasword.error = AppAlerts.PASSWORD_DONOT_MATCH
-            isLoading(false)
+            binding.isLoading = false
             return false
         }
 
         if (firstName.isEmpty()) {
             binding.etFirstName.error = AppAlerts.FIRST_NAME_ERROR
-            isLoading(false)
+            binding.isLoading = false
             return false
         }
 
         if (lastName.isEmpty()) {
             binding.etLastName.error = AppAlerts.LAST_NAME_ERROR
-            isLoading(false)
+            binding.isLoading = false
             return false
         }
-
         return true
     }
 
     override fun onLoginError(error: String) {
-        isLoading(false)
-        requireContext().showToastMessage(error)
+        binding.isLoading = false
+        ActivityBase.activity.showToastMessage(error)
         Log.d("onLoginError", error)
     }
 
     override fun onRegistrationError(error: String) {
-        isLoading(false)
-        Log.d("onRegistrationError", error) //TODO:show a proper mesage
-        requireContext().showToastMessage("registration error")
+        binding.isLoading = false
+        Log.d("onRegistrationError", error)
+        ActivityBase.activity.showToastMessage(AppAlerts.REGISTRATION_ERROR)
     }
 
     override fun onLoginSuccess() {
-        isLoading(false) //TODO:show a proper mesage
-        ActivityBase.activity.showToastMessage("login success")
+        binding.isLoading = false
+        ActivityBase.activity.showToastMessage(AppAlerts.LOGIN_SUCCESS)
+        goToMainActiviyt()
+    }
+
+    private fun goToMainActiviyt()
+    {
         ActivityBase.activity.apply {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 
+
     override fun onCompleteRegistration() {
-        isLoading(false) //TODO:show a proper mesage
-        ActivityBase.activity.showToastMessage("registration success")
-         firestoreHelper.insertUser(email = email, firstName = firstName, lastName = lastName, imageUri = userImage)
-        selectSignInMode()
+        binding.isLoading = false
+        ActivityBase.activity.showToastMessage(AppAlerts.REGISTRATION_SUCCESS)
+        firestoreHelper.uploadImageToStore(userImage)
+        //firestoreHelper.insertUser(email = email, firstName = firstName, lastName = lastName, imageUri = userImage)
     }
 
     private fun isLoading(show: Boolean = true) {
@@ -182,23 +220,23 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     }
 
     override fun onUserExists() {
-        isUserExist = AppConstants.USER_EXISTS
-        isLoading(false)
-        selectSignInMode()
+        userStatus = AppConstants.MODE_SIGN_IN
+        binding.isLoading = false
+        setViews(AppConstants.MODE_SIGN_IN)
     }
 
     override fun onUserDoesNotExists() {
-        isUserExist = AppConstants.USER_DOESNOT_EXISTS
-        isLoading(false)
-        selectSignUpMode()
+        userStatus = AppConstants.MODE_SIGN_UP
+        binding.isLoading = false
+        setViews(AppConstants.MODE_SIGN_UP)
     }
 
-    override fun onUserInsertedSuccessfully() { //TODO:show a proper mesage
-        requireContext().showToastMessage("user inserted on firestore")
-        selectSignInMode()
-        isLoading(false)
-        isUserExist=AppConstants.USER_EXISTS
+    override fun onUserInsertedSuccessfully() {
+        ActivityBase.activity.showToastMessage(AppAlerts.USER_INSRTED_FIRESTORE)
+        setViews(AppConstants.MODE_SIGN_IN)
+        binding.isLoading = false
 
+        goToMainActiviyt()
     }
 
     override fun onImageUriResult(uri: List<Uri>, isSingle: Boolean) {
@@ -206,32 +244,33 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         binding.imvProfile.setImageURI(userImage)
     }
 
-    private fun selectSignUpMode() {
-        binding.imvProfile.visibility = View.VISIBLE
-        binding.etPasword.visibility = View.VISIBLE
-        binding.etConfirmPasword.visibility = View.VISIBLE
-        binding.etFirstName.visibility = View.VISIBLE
-        binding.etLastName.visibility = View.VISIBLE
-        binding.tvButtonText.text = getString(R.string.sign_up)
+    private fun setViews(type : Int){
+        when(type) {
+            AppConstants.MODE_SIGN_IN -> {
+                binding.isLogin = true
+                binding.isSignUp = false
+                userStatus=AppConstants.MODE_SIGN_IN
+            }
+            AppConstants.MODE_SIGN_UP -> {
+                binding.isLogin = false
+                binding.isSignUp = true
+                userStatus=AppConstants.MODE_SIGN_UP
+            }
+            AppConstants.MODE_INITIAL_STATE -> {
+                binding.isLogin = false
+                binding.isSignUp = false
+                userStatus=AppConstants.MODE_INITIAL_STATE
+            }
+
+        }
     }
 
-    private fun selectSignInMode() {
-        binding.imvProfile.visibility = View.GONE
-        binding.etPasword.visibility = View.VISIBLE
-        binding.etConfirmPasword.visibility = View.GONE
-        binding.etFirstName.visibility = View.GONE
-        binding.etLastName.visibility = View.GONE
-        binding.tvButtonText.text = getString(R.string.sign_in)
+    override fun onUserImageUploadedSuccessfully(imageUrl: String) {
+        firestoreHelper.insertUser(email = email, firstName = firstName, lastName = lastName, imageUrl=imageUrl)
     }
 
-    private fun selectUserUnknownMode() {
-        binding.etEmail.visibility = View.VISIBLE
-        binding.imvProfile.visibility = View.GONE
-        binding.etPasword.visibility = View.GONE
-        binding.etConfirmPasword.visibility = View.GONE
-        binding.etFirstName.visibility = View.GONE
-        binding.etLastName.visibility = View.GONE
-        binding.tvButtonText.text = getString(R.string.proceed)
+    override fun onUserImageUploadProgress(progress: Int) {
+        binding.progress="$progress"
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -244,7 +283,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
 
     override fun afterTextChanged(s: Editable?) {
         if (s.toString().isEmpty()) {
-            selectUserUnknownMode()
+            setViews(AppConstants.MODE_INITIAL_STATE)
         }
     }
 
