@@ -1,6 +1,5 @@
 package com.example.chatapplication.view.chat.adapter
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,8 +7,6 @@ import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
 import com.example.chatapplication.data.responseModel.UserResponseModel
 import com.example.chatapplication.databinding.AdapterRecentConversationBinding
 import com.example.chatapplication.utilities.utils.IUserListener
-import com.example.chatapplication.view.chat.InboxFragment
-import io.grpc.Context
 
 class InboxAdapter(private val conversationList: ArrayList<ChatMessageResponseModel>) : RecyclerView.Adapter<InboxAdapter.ConversationViewHolder>()
 {
@@ -32,8 +29,8 @@ class InboxAdapter(private val conversationList: ArrayList<ChatMessageResponseMo
         holder.binding.root.setOnClickListener {
             val user = UserResponseModel(
                 id = conversationList[position].conversationId,
-                name = conversationList[position].conversationName,
-                image = conversationList[position].conversationImage
+                name = conversationList[position].receiverName,
+                image = conversationList[position].receiverImageUrl
             )
             mListener.onUserClicked(user)
         }

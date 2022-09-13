@@ -16,6 +16,7 @@ import com.example.chatapplication.databinding.FragmentSigninBinding
 import com.example.chatapplication.utilities.helperClasses.*
 import com.example.chatapplication.utilities.utils.*
 import com.example.chatapplication.view.MainActivity
+import com.example.chatapplication.view.base.ActivityBase
 import com.example.chatapplication.viewmodel.AuthViewModel
 
 
@@ -162,15 +163,15 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
 
     override fun onLoginSuccess() {
         isLoading(false) //TODO:show a proper mesage
-        requireContext().showToastMessage("login success")
-        AuthActivity.mActivity.apply {
+        ActivityBase.activity.showToastMessage("login success")
+        ActivityBase.activity.apply {
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
 
     override fun onCompleteRegistration() {
         isLoading(false) //TODO:show a proper mesage
-        requireContext().showToastMessage("registration success")
+        ActivityBase.activity.showToastMessage("registration success")
          firestoreHelper.insertUser(email = email, firstName = firstName, lastName = lastName, imageUri = userImage)
         selectSignInMode()
     }

@@ -54,5 +54,6 @@ object AppConstants
     const val STATUS_ACTIVE = 1
     const val STATUS_IN_ACTIVE = 2
     const val STATUS_OFFLINE = 3
-
+    const val VIEW_TYPE_SENT = 1
+    const val VIEW_TYPE_RECEIVE = 2
 }

@@ -18,6 +18,7 @@ import com.example.chatapplication.utilities.utils.IFBAuthListener
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.view.MainActivity
 import com.example.chatapplication.view.authentication.AuthActivity
+import com.example.chatapplication.view.base.ActivityBase
 import com.example.chatapplication.view.chat.adapter.InboxAdapter
 import com.google.firebase.messaging.FirebaseMessaging
 
@@ -103,7 +104,7 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
     private fun signOut()
     {
         ChatApplication.fbAuth.signOut()
-        MainActivity.mActivity.apply {
+        ActivityBase.activity.apply {
             startActivity(Intent(this, AuthActivity::class.java))
             finish()
         }

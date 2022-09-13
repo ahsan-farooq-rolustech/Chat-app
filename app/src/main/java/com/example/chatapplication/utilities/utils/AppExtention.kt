@@ -4,10 +4,26 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.example.chatapplication.view.base.ActivityBase
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+
+val Context.glide: RequestManager?
+    get() = Glide.with(this)
+
+fun ImageView.load(path: String) {
+    try {
+        context.glide!!.load(path).into(this)
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+    }
+}
 
 fun Context.showToastMessage(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

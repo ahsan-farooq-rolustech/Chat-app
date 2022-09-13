@@ -44,7 +44,7 @@
             android:layout_marginEnd="@dimen/_8sdp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{chatModel.conversationName}"
+            android:text="@{chatModel.receiverName}"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_13ssp"
             app:layout_constraintBottom_toTopOf="@+id/vViewSupporter"
