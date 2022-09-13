@@ -12,6 +12,7 @@ import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
 import com.example.chatapplication.data.responseModel.UserResponseModel
 import com.example.chatapplication.databinding.FragmentMessagesBinding
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
+import com.example.chatapplication.utilities.utils.AppAlerts
 import com.example.chatapplication.utilities.utils.FBConstants
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.view.chat.adapter.MessagesAdapter
@@ -55,6 +56,12 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener {
     }
 
     private fun sendMessage() {
+        val text=binding.etInputMessage.text.toString()
+        if(text.isEmpty())
+        {
+            binding.etInputMessage.error=AppAlerts.EMPTY_MESSAGE
+            return
+        }
         val message = HashMap<String, Any>()
         message[FBConstants.KEY_SENDER_ID] = userId!!
         message[FBConstants.KEY_RECEIVER_ID] = receivedUserResponseModel.email
