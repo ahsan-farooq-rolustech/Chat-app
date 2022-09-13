@@ -9,17 +9,23 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.annotation.GlideModule
+import com.example.chatapplication.ChatApplication
+import com.example.chatapplication.utilities.glideModules.GlideApp
 import com.example.chatapplication.view.base.ActivityBase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
 val Context.glide: RequestManager?
-    get() = Glide.with(this)
+    get() = GlideApp.with(this)
 
 fun ImageView.load(path: String) {
     try {
-        context.glide!!.load(path).into(this)
+        val imageReference= ChatApplication.firebaseStorage.getReferenceFromUrl(path)
+        context.glide!!.load(imageReference).into(this)
     } catch (ex: Exception) {
         ex.printStackTrace()
     }

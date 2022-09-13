@@ -9,6 +9,8 @@ import com.example.chatapplication.utilities.utils.FBConstants
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.utilities.utils.getReadableFormat
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -42,7 +44,8 @@ class FBStoreHelper {
         val storageReference = ChatApplication.firebaseStorage.reference.child("${FBConstants.KEY_STORAGE_USER_IMAGES}${randomKey}")
         storageReference.putFile(characterImage).addOnSuccessListener { task ->
             storageReference.downloadUrl.addOnSuccessListener { uri ->
-                mListener
+                val imageURl = Firebase.storage.getReferenceFromUrl(uri.toString())
+                val imageReference=ChatApplication.firebaseStorage.getReferenceFromUrl(uri.toString())
                 addUserImageLink(email,uri.toString())
             }
         }.addOnProgressListener { uploadTask ->

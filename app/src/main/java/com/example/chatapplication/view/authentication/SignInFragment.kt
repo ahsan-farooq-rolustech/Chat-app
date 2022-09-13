@@ -231,7 +231,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         binding.etConfirmPasword.visibility = View.GONE
         binding.etFirstName.visibility = View.GONE
         binding.etLastName.visibility = View.GONE
-        binding.tvButtonText.text = getString(R.string.procede)
+        binding.tvButtonText.text = getString(R.string.proceed)
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
