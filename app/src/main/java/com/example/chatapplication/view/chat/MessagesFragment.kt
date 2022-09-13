@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.R
@@ -86,12 +88,17 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             binding.imvBack.id -> {
-                requireActivity().onBackPressed()
+                onBackPressed()
             }
             R.id.imvSend -> {
                 sendMessage()
             }
         }
+    }
+
+    private fun onBackPressed() {
+        val action=MessagesFragmentDirections.actionChatFragmentToChatOfUsersFragment()
+        findNavController().navigate(action)
     }
 
     private fun isLoading(isLoading: Boolean) {

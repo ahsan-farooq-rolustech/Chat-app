@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/ChatOfUsersFragment">
+    app:startDestination="@id/InBoxFragment">
 
     <fragment
-        android:id="@+id/ChatOfUsersFragment"
+        android:id="@+id/InBoxFragment"
         android:name="com.example.chatapplication.view.chat.InboxFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_inbox" >
@@ -15,7 +15,7 @@
             app:destination="@id/usersFragment" />
         <action
             android:id="@+id/action_ChatOfUsersFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            app:destination="@id/MessagesFragment" />
     </fragment>
     <fragment
         android:id="@+id/usersFragment"
@@ -24,15 +24,20 @@
         tools:layout="@layout/fragment_users" >
         <action
             android:id="@+id/action_usersFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            app:destination="@id/MessagesFragment" />
     </fragment>
     <fragment
-        android:id="@+id/chatFragment"
+        android:id="@+id/MessagesFragment"
         android:name="com.example.chatapplication.view.chat.MessagesFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_messages" >
         <argument
             android:name="userResponseModel"
             app:argType="com.example.chatapplication.data.responseModel.UserResponseModel" />
+        <action
+            android:id="@+id/action_chatFragment_to_ChatOfUsersFragment"
+            app:destination="@id/InBoxFragment"
+            app:popUpTo="@id/InBoxFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
