@@ -1,6 +1,7 @@
 package com.example.chatapplication.utilities.utils
 
 import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
+import com.example.chatapplication.data.responseModel.InboxResponseModel
 import com.example.chatapplication.data.responseModel.UserResponseModel
 
 interface IFBAuthListener
@@ -27,6 +28,8 @@ interface IFirestoreListener
     fun onGetMessagesSuccessful(list:ArrayList<ChatMessageResponseModel>){}
     fun onUserImageUploadedSuccessfully(imageUrl:String){}
     fun onUserImageUploadProgress(progress: Int){}
+    fun onGetUserInboxSuccessful(list:ArrayList<InboxResponseModel>){}
+    fun onGetUserInboxFailure(error:String){}
 }
 
 

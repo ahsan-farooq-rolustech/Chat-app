@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.R
 import com.example.chatapplication.databinding.FragmentSigninBinding
 import com.example.chatapplication.utilities.helperClasses.FBAuthHelper
@@ -201,8 +202,13 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         ActivityBase.activity.showToastMessage(AppAlerts.USER_INSRTED_FIRESTORE)
         setViews(AppConstants.MODE_SIGN_IN)
         binding.isLoading = false
-
+        setUserPreferences()
         goToMainActiviyt()
+    }
+
+    private fun setUserPreferences() {
+        ChatApplication.db.putString(UserPrefConstants.FULL_NAME, "${binding.etFirstName.text} ${binding.etLastName.text}")
+        ChatApplication.db.putString(UserPrefConstants.EMAIL, "${binding.etEmail.text}")
     }
 
     override fun onImageUriResult(uri: List<Uri>, isSingle: Boolean) {

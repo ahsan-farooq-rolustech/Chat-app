@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.chatapplication.ChatApplication
@@ -46,7 +45,7 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener {
         helper = FBStoreHelper()
         helper.setListener(this)
 
-        if (userId != null) helper.checkIfConversationExists(userId!!, receivedUserResponseModel.id)
+        if (userId != null) helper.checkIfConversationExists(userId!!, receivedUserResponseModel)
         setAdapter()
     }
 

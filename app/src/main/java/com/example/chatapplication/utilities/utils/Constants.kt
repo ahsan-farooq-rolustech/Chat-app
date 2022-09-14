@@ -27,6 +27,7 @@ object FBConstants {
 }
 
 object AppAlerts {
+    const val GET_INBOX_FAILURE = "Error in getting chats"
     const val EMPTY_MESSAGE = "Empty message"
     const val NO_USER_AVALABLE = "No users available"
     const val INCORRECT_EMAIL = "Incorrect Email"
@@ -34,11 +35,11 @@ object AppAlerts {
     const val PASSWORD_DONOT_MATCH = "Donot match"
     const val FIRST_NAME_ERROR = "First name cannot be empty"
     const val LAST_NAME_ERROR = "Last name cannot be empty"
-    const val INSERT_USER_IMAGE="Please Insert User Image"
-    const val REGISTRATION_ERROR="Registration falied due to some error"
-    const val LOGIN_SUCCESS="Login Successful"
-    const val REGISTRATION_SUCCESS="Registration is successful"
-    const val USER_INSRTED_FIRESTORE="User successfully in Firestore"
+    const val INSERT_USER_IMAGE = "Please Insert User Image"
+    const val REGISTRATION_ERROR = "Registration falied due to some error"
+    const val LOGIN_SUCCESS = "Login Successful"
+    const val REGISTRATION_SUCCESS = "Registration is successful"
+    const val USER_INSRTED_FIRESTORE = "user successfully in Firestore"
 }
 
 object ValidationConstants {
@@ -56,4 +57,10 @@ object AppConstants {
     const val STATUS_OFFLINE = 3
     const val VIEW_TYPE_SENT = 1
     const val VIEW_TYPE_RECEIVE = 2
+}
+
+object UserPrefConstants {
+    const val IMAGE_URL = "image_url"
+    const val FULL_NAME = "full_name"
+    const val EMAIL = "email"
 }

@@ -3,6 +3,7 @@ package com.example.chatapplication
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.chatapplication.utilities.helperClasses.TinyDB
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -14,14 +15,15 @@ class ChatApplication : Application(),LifecycleEventObserver
         lateinit var fbAuth: FirebaseAuth
         lateinit var firestore:FirebaseFirestore
         lateinit var firebaseStorage:FirebaseStorage
+        lateinit var db: TinyDB
     }
 
     override fun onCreate()
     {
-
         super.onCreate()
         initFirebase()
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        db = TinyDB(this)
     }
 
     private fun initFirebase()

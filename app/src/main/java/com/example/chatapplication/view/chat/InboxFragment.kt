@@ -10,12 +10,11 @@ import androidx.navigation.Navigation
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.R
 import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
+import com.example.chatapplication.data.responseModel.InboxResponseModel
 import com.example.chatapplication.databinding.FragmentInboxBinding
 import com.example.chatapplication.utilities.helperClasses.FBAuthHelper
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
-import com.example.chatapplication.utilities.utils.AppConstants
-import com.example.chatapplication.utilities.utils.IFBAuthListener
-import com.example.chatapplication.utilities.utils.IFirestoreListener
+import com.example.chatapplication.utilities.utils.*
 import com.example.chatapplication.view.MainActivity
 import com.example.chatapplication.view.authentication.AuthActivity
 import com.example.chatapplication.view.base.ActivityBase
@@ -40,7 +39,13 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
         setListeners()
         getToken()
         setUserStatus()
+        getConversations()
+        firestoreHelper.getConversations(ChatApplication.fbAuth.currentUser?.email!!)
         return binding.root
+    }
+
+    private fun getConversations() {
+        firestoreHelper
     }
 
     private fun setUserStatus()
@@ -67,9 +72,9 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
         firestoreHelper.setListener(this)
     }
 
-    private fun setAdapter(chatMessagesList: ArrayList<ChatMessageResponseModel>)
+    private fun setAdapter(inboxList: ArrayList<ChatMessageResponseModel>)
     {
-        inboxAdapter = InboxAdapter(chatMessagesList)
+        inboxAdapter = InboxAdapter(inboxList)
         binding.rvConversation.adapter = inboxAdapter
         inboxAdapter.notifyDataSetChanged()
     }
@@ -112,6 +117,14 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
 
     override fun onChatCreatedSuccess() {
         TODO("Not yet implemented")
+    }
+
+    override fun onGetUserInboxSuccessful(list: ArrayList<InboxResponseModel>) {
+
+    }
+
+    override fun onGetUserInboxFailure(error: String) {
+        ActivityBase.activity.showToastMessage(AppAlerts.GET_INBOX_FAILURE)
     }
 
     //    override fun onPause()
