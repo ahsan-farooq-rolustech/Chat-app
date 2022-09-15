@@ -24,7 +24,7 @@ import com.example.chatapplication.view.base.ActivityBase
 class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFirestoreListener, TextWatcher, ImageHelper.IImageResultListener {
     private lateinit var binding: FragmentSigninBinding
     private lateinit var authHelper: FBAuthHelper
-    private lateinit var firestoreHelper: FBStoreHelper
+    private lateinit var fsHelper: FBStoreHelper
     private var userStatus = AppConstants.MODE_INITIAL_STATE
     private lateinit var email: String
     private lateinit var imageHelper: ImageHelper
@@ -32,8 +32,8 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     private lateinit var firstName: String
     private lateinit var lastName: String
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View { // Inflate the layout for this fragment
-        binding = FragmentSigninBinding.inflate(layoutInflater, container, false) //        setViewModel()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentSigninBinding.inflate(layoutInflater, container, false)
         setListeners()
         initThings()
         return binding.root
@@ -46,8 +46,8 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         binding.isLoading = false
         authHelper = FBAuthHelper(ActivityBase.activity)
         authHelper.setListener(this)
-        firestoreHelper = FBStoreHelper()
-        firestoreHelper.setListener(this)
+        fsHelper = FBStoreHelper()
+        fsHelper.setListener(this)
         imageHelper = ImageHelper(this, false)
         imageHelper.setImageListener(this)
     }
@@ -82,7 +82,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
 
         when (userStatus) {
             AppConstants.MODE_INITIAL_STATE -> {
-                checkUserExistance()
+                checkIfUserExists()
             }
             AppConstants.MODE_SIGN_IN -> {
                 signIn(email, password)
@@ -105,9 +105,9 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
         }
     }
 
-    private fun checkUserExistance() {
+    private fun checkIfUserExists() {
         if (Validators.validateEmail(email)) {
-            firestoreHelper.isUserExists(email)
+            fsHelper.isUserExists(email)
         } else {
             binding.etEmail.error = AppAlerts.INCORRECT_EMAIL
             binding.isLoading = false
@@ -133,9 +133,9 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
             return false
         }
 
-        if (validateResult == ValidationConstants.PASSWORD_DONOT_MATCH) {
-            binding.etPasword.error = AppAlerts.PASSWORD_DONOT_MATCH
-            binding.etConfirmPasword.error = AppAlerts.PASSWORD_DONOT_MATCH
+        if (validateResult == ValidationConstants.PASSWORD_NOT_MATCH) {
+            binding.etPasword.error = AppAlerts.PASSWORD_NOT_MATCH
+            binding.etConfirmPasword.error = AppAlerts.PASSWORD_NOT_MATCH
             binding.isLoading = false
             return false
         }
@@ -169,10 +169,11 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     override fun onLoginSuccess() {
         binding.isLoading = false
         ActivityBase.activity.showToastMessage(AppAlerts.LOGIN_SUCCESS)
-        goToMainActiviyt()
+        goToMainActivity()
     }
 
-    private fun goToMainActiviyt() {
+    private fun goToMainActivity() {
+        setUserPreferences()
         ActivityBase.activity.apply {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -183,7 +184,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     override fun onCompleteRegistration() {
         binding.isLoading = false
         ActivityBase.activity.showToastMessage(AppAlerts.REGISTRATION_SUCCESS)
-        firestoreHelper.uploadImageToStore(userImage) //firestoreHelper.insertUser(email = email, firstName = firstName, lastName = lastName, imageUri = userImage)
+        fsHelper.uploadImageToStore(userImage)
     }
 
     override fun onUserExists() {
@@ -199,11 +200,10 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     }
 
     override fun onUserInsertedSuccessfully() {
-        ActivityBase.activity.showToastMessage(AppAlerts.USER_INSRTED_FIRESTORE)
+        ActivityBase.activity.showToastMessage(AppAlerts.USER_INSERTED_SUCCESS)
         setViews(AppConstants.MODE_SIGN_IN)
         binding.isLoading = false
-        setUserPreferences()
-        goToMainActiviyt()
+        goToMainActivity()
     }
 
     private fun setUserPreferences() {
@@ -238,7 +238,7 @@ class SignInFragment : Fragment(), View.OnClickListener, IFBAuthListener, IFires
     }
 
     override fun onUserImageUploadedSuccessfully(imageUrl: String) {
-        firestoreHelper.insertUser(email = email, firstName = firstName, lastName = lastName, imageUrl = imageUrl)
+        fsHelper.insertUser(email = email, firstName = firstName, lastName = lastName, imageUrl = imageUrl)
     }
 
     override fun onUserImageUploadProgress(progress: Int) {

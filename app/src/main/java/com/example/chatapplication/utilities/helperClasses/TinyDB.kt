@@ -18,8 +18,6 @@ class TinyDB(appContext: Context) {
 
     private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
     private var DEFAULT_APP_IMAGEDATA_DIRECTORY: String? = null
-    //    var spec = KeyGenParameterSpec.Builder(MasterKey.DEFAULT_MASTER_KEY_ALIAS, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT).setBlockModes(KeyProperties.BLOCK_MODE_GCM).setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE).setKeySize(MasterKey.DEFAULT_AES_GCM_MASTER_KEY_SIZE).build()
-    //    var masterKey = MasterKey.Builder(appContext).setKeyGenParameterSpec(spec).build()
 
     /**
      * Returns the String path of the last saved image
@@ -35,8 +33,7 @@ class TinyDB(appContext: Context) {
     val all: Map<String, *>
         get() = preferences.all
 
-    init {
-        //        preferences = EncryptedSharedPreferences.create(appContext, "com.dakota.dakotaspark", masterKey, // masterKey created above
+    init { //        preferences = EncryptedSharedPreferences.create(appContext, "com.dakota.dakotaspark", masterKey, // masterKey created above
         //            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
     }
 
@@ -51,8 +48,7 @@ class TinyDB(appContext: Context) {
         try {
             bitmapFromPath = BitmapFactory.decodeFile(path)
 
-        } catch (e: Exception) {
-            // TODO: handle exception
+        } catch (e: Exception) { // TODO: handle exception
             e.printStackTrace()
         }
 

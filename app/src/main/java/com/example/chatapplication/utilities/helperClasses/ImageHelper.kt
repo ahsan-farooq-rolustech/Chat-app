@@ -116,7 +116,8 @@ class ImageHelper(mObject: Any, isActivity: Boolean) {
         return file.toUri()
     }
 
-    @Throws(IOException::class) private fun saveImageAndGetUri(ctx: Context, bitmap: Bitmap): Uri {
+    @Throws(IOException::class)
+    private fun saveImageAndGetUri(ctx: Context, bitmap: Bitmap): Uri {
         val imageUri: Uri
         val imageOutStream = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val values = ContentValues()

@@ -1,95 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="@color/primary"
-    tools:context=".view.chat.InboxFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/ivImageProfile"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_marginStart="@dimen/_16sdp"
-        android:layout_marginLeft="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:background="@drawable/background_icon"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:riv_corner_radius="@dimen/_8sdp" />
+    <data>
 
+        <variable
+            name="isLoading"
+            type="Boolean" />
 
-    <ImageView
-        android:id="@+id/imvImageSignout"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:layout_marginEnd="@dimen/_16sdp"
-        android:layout_marginRight="@dimen/_16sdp"
-        android:background="@drawable/background_icon"
-        android:padding="@dimen/_6sdp"
-        android:src="@drawable/ic_logout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white" />
+        <variable
+            name="userImageUrl"
+            type="String" />
 
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_8sdp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_14ssp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/ivImageProfile"
-        app:layout_constraintEnd_toStartOf="@id/imvImageSignout"
-        app:layout_constraintStart_toEndOf="@id/ivImageProfile"
-        app:layout_constraintTop_toTopOf="@id/ivImageProfile"/>
-    <FrameLayout
+        <variable
+            name="userStatus"
+            type="Integer" />
+
+        <variable
+            name="isInboxEmpty"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:background="@drawable/background_content_bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivImageProfile">
-        
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvConversation"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="@color/primary"
+        tools:context=".view.chat.InboxFragment">
+
+        <RelativeLayout
+            android:id="@+id/rlUserImage"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/imvImageProfile"
+                loadImage="@{userImageUrl}"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:background="@drawable/background_image"
+                android:scaleType="centerCrop"
+                app:riv_border_color="@color/primary"
+                app:riv_border_width="0.7dp"
+                app:riv_oval="true" />
+
+            <ImageView
+                setUserStatus="@{userStatus}"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/bg_round" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imvImageSignout"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:background="@drawable/background_icon"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/ic_logout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="Inbox"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/rlUserImage"
+            app:layout_constraintEnd_toStartOf="@id/imvImageSignout"
+            app:layout_constraintStart_toEndOf="@id/rlUserImage"
+            app:layout_constraintTop_toTopOf="@id/rlUserImage" />
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:overScrollMode="never"
-            android:padding="@dimen/_20sdp"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:background="@drawable/background_content_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rlUserImage">
 
-        <ProgressBar
-            android:id="@+id/pbLoader"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_gravity="center"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvInbox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:paddingTop="@dimen/_10sdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:visibleGone="@{!isLoading}" />
 
-    </FrameLayout>
+            <ProgressBar
+                android:id="@+id/pbLoader"
+                visibleGone="@{isLoading}"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_gravity="center" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabNewChat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/_24sdp"
-        android:layout_marginRight="@dimen/_24sdp"
-        android:layout_marginBottom="@dimen/_24sdp"
-        android:contentDescription=""
-        android:src="@drawable/ic_add"
-        android:backgroundTint="@color/primary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:tint="@color/white" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                visibleGone="@{isInboxEmpty}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    android:src="@drawable/ic_no_conversation" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/inbox_is_empty"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabNewChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_24sdp"
+            android:layout_marginRight="@dimen/_24sdp"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:backgroundTint="@color/primary"
+            android:contentDescription=""
+            android:src="@drawable/ic_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@android:color/white" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

@@ -6,18 +6,21 @@ import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.data.responseModel.ChatMessageResponseModel
 import com.example.chatapplication.data.responseModel.InboxResponseModel
 import com.example.chatapplication.data.responseModel.UserResponseModel
+import com.example.chatapplication.utilities.utils.DateUtil.getMinutesAgoLogicDate
 import com.example.chatapplication.utilities.utils.FBConstants
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.utilities.utils.UserPrefConstants
-import com.example.chatapplication.utilities.utils.getReadableFormat
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FBStoreHelper {
 
     private lateinit var mListener: IFirestoreListener
+    private var totalConversations = 0
 
     fun setListener(listener: IFirestoreListener) {
         mListener = listener
@@ -82,6 +85,8 @@ class FBStoreHelper {
         ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).whereEqualTo(FBConstants.KEY_EMAIL, email).get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 if (task.result.size() > 0) {
+                    val imageUrl = task.result.documents[0].get(FBConstants.KEY_USER_IMAGE).toString()
+                    ChatApplication.db.putString(UserPrefConstants.IMAGE_URL, imageUrl)
                     mListener.onUserExists()
                 } else {
                     mListener.onUserDoesNotExists()
@@ -97,35 +102,7 @@ class FBStoreHelper {
     }
 
     fun getUsers() {
-        val userEmail = ChatApplication.fbAuth.currentUser?.email // //        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).addSnapshotListener(EventListener { value, error -> //            if (error != null) //            { //                return@EventListener //            } // //            if (value != null) //            { //                val userResponses=ArrayList<UserResponseModel>()
-        //                for(documentChanges in value.documents)
-        //                {
-        //                    if(documentChanges.id==userEmail)
-        //                    {
-        //                        continue
-        //                    }
-        //
-        //                    val userResponse=UserResponseModel(
-        //                        email = documentChanges.getString(FBConstants.KEY_EMAIL)?:"",
-        //                        token = documentChanges.getString(FBConstants.KEY_FCM_TOKEN)?:"",
-        //                        name = documentChanges.getString(FBConstants.KEY_FIRST_NAME)?:"",
-        //                        image = if (documentChanges.getString(FBConstants.KEY_USER_IMAGE)!=null)documentChanges.getString(FBConstants.KEY_USER_IMAGE)!! else "",
-        //                        status = if ( documentChanges.get(FBConstants.KEY_STATUS)!=null)  documentChanges.get(FBConstants.KEY_STATUS)!!.toString().toInt() else 0
-        //                    )
-        //                    userResponses.add(userResponse)
-        //                }
-        //                if(userResponses.size>0)
-        //                {
-        //                    mListener.onUserGetSuccessfully(userResponses)
-        //                }
-        //                else
-        //                {
-        //                    mListener.onUserEmpty()
-        //                }
-        //            }
-        //        })
-
-
+        val userEmail = ChatApplication.fbAuth.currentUser?.email
         ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).get().addOnCompleteListener { task ->
             if (task.isSuccessful && task.result != null) {
                 val userResponsModels = ArrayList<UserResponseModel>()
@@ -151,7 +128,7 @@ class FBStoreHelper {
     fun getUserChanges() {
         val userEmail = ChatApplication.fbAuth.currentUser?.email
         ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USERS).addSnapshotListener(EventListener { value, error ->
-            if (error != null) { //                mListener.onUserGetFailure(error.toString())
+            if (error != null) {
                 return@EventListener
             }
 
@@ -176,7 +153,6 @@ class FBStoreHelper {
         ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document(conversationId).collection(FBConstants.KEY_COLLECTION_CHAT).add(message)
     }
 
-
     fun checkIfConversationExists(user1Id: String, receiverModel: UserResponseModel) {
         val collectionReference = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS)
         val checkIfSenderTask = collectionReference.whereEqualTo(FBConstants.KEY_USER1, user1Id).whereEqualTo(FBConstants.KEY_USER2, receiverModel.id).get()
@@ -187,7 +163,6 @@ class FBStoreHelper {
                 if (snapShotList[0].documents.isEmpty() && snapShotList[1].documents.isEmpty()) {
                     createNewConversation(user1Id, receiverModel)
                 } else {
-                    val conversationId : String
                     if (snapShotList[0].documents.isNotEmpty()) {
                         mListener.onConversationGetSuccess(snapShotList[0].documents[0].id)
                     } else {
@@ -197,52 +172,16 @@ class FBStoreHelper {
             }
 
         }
-
-        /*collectionReference.whereEqualTo(FBConstants.KEY_USER1, user1Id).whereEqualTo(FBConstants.KEY_USER2, receiverModel.id).get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                if (task.result.size() > 0) { //means that there exists a conversation of these two chats
-                    val conversationId = task.result.documents[0].id
-                    mListener.onConversationGetSuccess(conversationId)
-                    isFirstQuerySuccess = true
-                    isFirstQueryExecuted = true
-
-                    return@addOnCompleteListener
-                } else { //there is no conversation created earlier so create a new one and get its id
-                    isFirstQuerySuccess = false
-                    isFirstQueryExecuted = true
-
-                }
-            } else { //the query is no executed as there are some errors
-                isFirstQuerySuccess = false
-                isFirstQueryExecuted = false
-
-            }
-        }*/
-        /*if (!isFirstQuerySuccess) collectionReference.whereEqualTo(FBConstants.KEY_USER1, receiverModel.id).whereEqualTo(FBConstants.KEY_USER2, user1Id).get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                if (task.result.size() > 0) { //means that there exists a conversation of these two chats
-                    val conversationId = task.result.documents[0].id
-                    mListener.onConversationGetSuccess(conversationId)
-                    isFirstQuerySuccess = true
-                    isFirstQueryExecuted = true
-                } else { //there is no conversation created of these two chats so create a new one
-                    if (!isFirstQuerySuccess && isFirstQueryExecuted) createNewConversation(user1Id, receiverModel)
-
-                }
-            }
-        }*/
-
-
     }
 
     private fun createNewConversation(user1Id: String, receiverModel: UserResponseModel) {
         val data = HashMap<String, Any>()
         data[FBConstants.KEY_USER1] = user1Id
         data[FBConstants.KEY_USER2] = receiverModel.id
-        data[FBConstants.KEY_RECEIVER_IMAGE] = receiverModel.image
-        data[FBConstants.KEY_RECEIVER_NAME] = receiverModel.name
-        data[FBConstants.KEY_SENDER_IMAGE] = ChatApplication.db.getString(UserPrefConstants.IMAGE_URL)!!
-        data[FBConstants.KEY_SENDER_NAME] = ChatApplication.db.getString(UserPrefConstants.FULL_NAME)!!
+        data[FBConstants.KEY_USER_2_IMAGE] = receiverModel.image
+        data[FBConstants.KEY_USER_2_NAME] = receiverModel.name
+        data[FBConstants.KEY_USER_1_IMAGE] = ChatApplication.db.getString(UserPrefConstants.IMAGE_URL)!!
+        data[FBConstants.KEY_USER_1_NAME] = ChatApplication.db.getString(UserPrefConstants.FULL_NAME)!!
         ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).add(data).addOnSuccessListener { document ->
             val conversationId = document.id
             mListener.onConversationGetSuccess(conversationId)
@@ -257,7 +196,7 @@ class FBStoreHelper {
             }
             if (value != null) {
                 for (documentChange in value.documentChanges) {
-                    val chatMessageResponseModel = ChatMessageResponseModel(senderId = documentChange.document.getString(FBConstants.KEY_SENDER_ID) ?: "", receiverId = documentChange.document.getString(FBConstants.KEY_RECEIVER_ID) ?: "", message = documentChange.document.getString(FBConstants.KEY_MESSAGE) ?: "", dateTime = documentChange.document.getDate(FBConstants.KEY_TIMESTAMP)?.getReadableFormat() ?: "", dateObj = documentChange.document.getDate(FBConstants.KEY_TIMESTAMP))
+                    val chatMessageResponseModel = ChatMessageResponseModel(senderId = documentChange.document.getString(FBConstants.KEY_SENDER_ID) ?: "", receiverId = documentChange.document.getString(FBConstants.KEY_RECEIVER_ID) ?: "", message = documentChange.document.getString(FBConstants.KEY_MESSAGE) ?: "", dateTime = documentChange.document.getDate(FBConstants.KEY_TIMESTAMP)?.getMinutesAgoLogicDate() ?: "", dateObj = documentChange.document.getDate(FBConstants.KEY_TIMESTAMP))
                     messagesList.add(chatMessageResponseModel)
                 }
                 messagesList.sortBy {
@@ -275,40 +214,38 @@ class FBStoreHelper {
         Tasks.whenAllSuccess<QuerySnapshot>(searchUser1, searchUser2).addOnSuccessListener { snapShotList ->
             val list = ArrayList<InboxResponseModel>()
             for (snapShots in snapShotList) {
+                totalConversations += snapShots.documents.size
                 for (document in snapShots) {
-                    val inboxModel = InboxResponseModel(
-                        user1Email = document.getString(FBConstants.KEY_USER1) ?: "",
-                        user2EMail = document.getString(FBConstants.KEY_USER2) ?: "",
-                        senderName = document.getString(FBConstants.KEY_SENDER_NAME)?:"",
-                        receiverName = document.getString(FBConstants.KEY_RECEIVER_NAME)?:"",
-                        senderImageUrl = document.getString(FBConstants.KEY_SENDER_IMAGE)?:"",
-                        receiverImageUrl = document.getString(FBConstants.KEY_RECEIVER_IMAGE)?:""
-                    )
+                    val inboxModel = InboxResponseModel(conversationId = document.id, user1Email = document.getString(FBConstants.KEY_USER1) ?: "", user2EMail = document.getString(FBConstants.KEY_USER2) ?: "", user1Name = document.getString(FBConstants.KEY_USER_1_NAME) ?: "", user2Name = document.getString(FBConstants.KEY_USER_2_NAME) ?: "", user1ImageUrl = document.getString(FBConstants.KEY_USER_1_IMAGE) ?: "", user2ImageUrl = document.getString(FBConstants.KEY_USER_2_IMAGE) ?: "", lastMsg = "", lastMsgTime = "")
                     list.add(inboxModel)
                 }
             }
-            mListener.onGetUserInboxSuccessful(list)
+
+            if (totalConversations == 0) {
+                mListener.onGetUserInboxSuccessful(list)
+            } else getLastMessageOfEachChat(list)
         }.addOnFailureListener { error ->
             mListener.onGetUserInboxFailure(error.toString())
         }
     }
 
+    private fun getLastMessageOfEachChat(list: ArrayList<InboxResponseModel>) {
+        for (i in 0 until list.size) {
+            val chatRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document(list[i].conversationId).collection(FBConstants.KEY_COLLECTION_CHAT).orderBy(FBConstants.KEY_TIMESTAMP, Query.Direction.DESCENDING).limit(1)
+            chatRef.get().addOnSuccessListener { chatRes ->
+                if (chatRes.documents.size > 0) {
+                    list[i].lastMsg = chatRes.documents[0].get(FBConstants.KEY_MESSAGE).toString()
+                    list[i].lastMsgTime = chatRes.documents[0].getDate(FBConstants.KEY_TIMESTAMP)?.getMinutesAgoLogicDate()!!
+                }
 
-//        fun getUserProfile() {
-//            val docRef = FirebaseApp.fbStore.collection(FBConstants.TABLE_USERS).document(FirebaseApp.fbAuth.currentUser!!.uid)
-//            val user = UserResponseModel()
-//            user.id = FirebaseApp.fbAuth.currentUser!!.uid
-//
-//            /*docRef.get().addOnSuccessListener{
-//            }*/ //for getting the simple values of table
-//
-//            //if you want to get the realTimeChange
-//            docRef.addSnapshotListener { value, error ->
-//                user.firstName = value!!.get(FBConstants.COL_FIRST_NAME).toString()
-//                user.lastName = value!!.get(FBConstants.COL_LAST_NAME).toString()
-//                user.phoneNumber = value!!.get(FBConstants.COL_PHONE).toString()
-//                user.email = value!!.get(FBConstants.COL_EMAIL).toString()
-//                mListener.getUserProfile(user)
-//            }
-//        }
+                if (i + 1 == totalConversations) {
+                    mListener.onGetUserInboxSuccessful(list)
+                }
+            }.addOnFailureListener { error ->
+                mListener.onGetUserInboxFailure(error.toString())
+            }
+        }
+
+
+    }
 }

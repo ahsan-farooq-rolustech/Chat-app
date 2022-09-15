@@ -38,6 +38,7 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener {
     }
 
     private fun initThings() {
+        binding.isLoading = true
         userId = ChatApplication.fbAuth.currentUser?.email
         receivedUserResponseModel = args.userResponseModel
         binding.tvName.text = receivedUserResponseModel.name
@@ -53,14 +54,13 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener {
         messagesAdapter = MessagesAdapter(messagesList, userId!!)
         binding.rvChat.adapter = messagesAdapter
         binding.rvChat.visibility = View.VISIBLE
-        isLoading(false)
+        binding.isLoading = false
     }
 
     private fun sendMessage() {
-        val text=binding.etInputMessage.text.toString()
-        if(text.isEmpty())
-        {
-            binding.etInputMessage.error=AppAlerts.EMPTY_MESSAGE
+        val text = binding.etInputMessage.text.toString()
+        if (text.isEmpty()) {
+            binding.etInputMessage.error = AppAlerts.EMPTY_MESSAGE
             return
         }
         val message = HashMap<String, Any>()
@@ -74,11 +74,6 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener {
         }
     }
 
-
-    private fun setHelpers() {
-
-    }
-
     private fun setListeners() {
         binding.imvBack.setOnClickListener(this)
         binding.imvSend.setOnClickListener(this)
@@ -86,9 +81,7 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            binding.imvBack.id -> {
-                onBackPressed()
-            }
+            binding.imvBack.id -> onBackPressed()
             R.id.imvSend -> {
                 sendMessage()
             }
@@ -96,13 +89,8 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener {
     }
 
     private fun onBackPressed() {
-        val action=MessagesFragmentDirections.actionChatFragmentToChatOfUsersFragment()
+        val action = MessagesFragmentDirections.actionChatFragmentToChatOfUsersFragment()
         findNavController().navigate(action)
-    }
-
-    private fun isLoading(isLoading: Boolean) {
-        if (isLoading) binding.pbLoader.visibility = View.GONE
-        else binding.pbLoader.visibility = View.GONE
     }
 
     override fun onConversationGetSuccess(conversationId: String) {

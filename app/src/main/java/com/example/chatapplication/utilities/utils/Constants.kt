@@ -19,33 +19,33 @@ object FBConstants {
     const val KEY_USER1 = "user1"
     const val KEY_USER2 = "user2"
     const val KEY_STORAGE_USER_IMAGES = "user_images/"
-    const val KEY_SENDER_NAME = "senderName"
-    const val KEY_RECEIVER_NAME = "receiverName"
-    const val KEY_SENDER_IMAGE = "senderImage"
-    const val KEY_RECEIVER_IMAGE = "receiverImage"
+    const val KEY_USER_1_NAME = "user1_name"
+    const val KEY_USER_2_NAME = "user2_name"
+    const val KEY_USER_1_IMAGE = "user1_image_url"
+    const val KEY_USER_2_IMAGE = "user2_image_url"
     const val KEY_LAST_MESSAGE = "lastMessage"
 }
 
 object AppAlerts {
     const val GET_INBOX_FAILURE = "Error in getting chats"
     const val EMPTY_MESSAGE = "Empty message"
-    const val NO_USER_AVALABLE = "No users available"
+    const val NO_USER_AVAILABLE = "No users available"
     const val INCORRECT_EMAIL = "Incorrect Email"
     const val PASSWORD_LENGTH_SHORT = "Length must be greater than 5"
-    const val PASSWORD_DONOT_MATCH = "Donot match"
+    const val PASSWORD_NOT_MATCH = "Don't match"
     const val FIRST_NAME_ERROR = "First name cannot be empty"
     const val LAST_NAME_ERROR = "Last name cannot be empty"
     const val INSERT_USER_IMAGE = "Please Insert User Image"
-    const val REGISTRATION_ERROR = "Registration falied due to some error"
+    const val REGISTRATION_ERROR = "Registration failed due to some error"
     const val LOGIN_SUCCESS = "Login Successful"
     const val REGISTRATION_SUCCESS = "Registration is successful"
-    const val USER_INSRTED_FIRESTORE = "user successfully in Firestore"
+    const val USER_INSERTED_SUCCESS = "user successfully in Firestore"
 }
 
 object ValidationConstants {
-    const val PASSWORD_DONOT_MATCH = -1
+    const val PASSWORD_NOT_MATCH = -1
     const val PASSWORD_LEN_ERROR = -2
-    const val PASSWORK_OKAY = 0
+    const val PASSWORD_OKAY = 0
 }
 
 object AppConstants {

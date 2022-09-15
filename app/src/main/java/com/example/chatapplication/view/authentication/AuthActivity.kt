@@ -1,6 +1,5 @@
 package com.example.chatapplication.view.authentication
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.example.chatapplication.ChatApplication

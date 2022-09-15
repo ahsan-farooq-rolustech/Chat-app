@@ -79,16 +79,13 @@ open class ActivityBase : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     fun setStatusBarColor(color: Int, flag: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = activity.window
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = color
-            activity.window.decorView.systemUiVisibility = flag
+        val window = activity.window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = color
+        activity.window.decorView.systemUiVisibility = flag
 
-        }
     }
 
     companion object {

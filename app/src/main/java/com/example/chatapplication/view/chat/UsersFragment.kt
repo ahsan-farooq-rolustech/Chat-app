@@ -18,39 +18,9 @@ import com.example.chatapplication.utilities.utils.IUserListener
 import com.example.chatapplication.view.base.ActivityBase
 
 class UsersFragment : Fragment(), View.OnClickListener, IFirestoreListener, IUserListener {
-    //    // TODO: Rename and change types of parameters
-    //    private var param1: String? = null
-    //    private var param2: String? = null
-    //
-    //    companion object
-    //    {
-    //        /**
-    //         * Use this factory method to create a new instance of
-    //         * this fragment using the provided parameters.
-    //         *
-    //         * @param param1 Parameter 1.
-    //         * @param param2 Parameter 2.
-    //         * @return A new instance of fragment UsersFragment.
-    //         */
-    //        // TODO: Rename and change types and number of parameters
-    //        @JvmStatic fun newInstance(param1: String, param2: String) = UsersFragment().apply {
-    //            arguments = Bundle().apply {
-    //                putString(ARG_PARAM1, param1)
-    //                putString(ARG_PARAM2, param2)
-    //            }
-    //        }
-    //    }
-    //
-    //    override fun onCreate(savedInstanceState: Bundle?)
-    //    {
-    //        super.onCreate(savedInstanceState)
-    //        arguments?.let {
-    //            param1 = it.getString(ARG_PARAM1)
-    //            param2 = it.getString(ARG_PARAM2)
-    //        }
-    //    }
+
     private lateinit var binding: FragmentUsersBinding
-    private lateinit var firestoreHelper: FBStoreHelper
+    private lateinit var fsHelper: FBStoreHelper
     private lateinit var adapter: UserAdapter
     private lateinit var usersList: ArrayList<UserResponseModel>
 
@@ -67,13 +37,13 @@ class UsersFragment : Fragment(), View.OnClickListener, IFirestoreListener, IUse
     }
 
     private fun setHelpers() {
-        firestoreHelper = FBStoreHelper()
-        firestoreHelper.setListener(this)
+        fsHelper = FBStoreHelper()
+        fsHelper.setListener(this)
     }
 
     private fun getUsers() {
         loading(true)
-        firestoreHelper.getUsers()
+        fsHelper.getUsers()
     }
 
 
@@ -94,7 +64,7 @@ class UsersFragment : Fragment(), View.OnClickListener, IFirestoreListener, IUse
     }
 
     private fun showErrorMessage() {
-        binding.tvErrorMessage.text = AppAlerts.NO_USER_AVALABLE
+        binding.tvErrorMessage.text = AppAlerts.NO_USER_AVAILABLE
         binding.tvErrorMessage.visibility = View.VISIBLE
     }
 
@@ -107,7 +77,7 @@ class UsersFragment : Fragment(), View.OnClickListener, IFirestoreListener, IUse
     }
 
     private fun getChangesInUser() {
-        firestoreHelper.getUserChanges()
+        fsHelper.getUserChanges()
     }
 
     private fun setAdapter(userResponsModels: ArrayList<UserResponseModel>) {
@@ -115,7 +85,7 @@ class UsersFragment : Fragment(), View.OnClickListener, IFirestoreListener, IUse
         adapter = UserAdapter(ActivityBase.activity, usersList)
         adapter.setListener(this)
         binding.rvUsers.adapter = adapter
-        adapter.notifyDataSetChanged()
+        adapter.notifyItemRangeChanged(0, usersList.size)
     }
 
     override fun onUserDoesNotExists() {
@@ -142,12 +112,6 @@ class UsersFragment : Fragment(), View.OnClickListener, IFirestoreListener, IUse
                 }
             }
         }
-        adapter.notifyDataSetChanged()
+        adapter.notifyItemRangeChanged(0, usersList.size)
     }
-
-    override fun onChatCreatedSuccess() {
-        TODO("Not yet implemented")
-    }
-
-
 }

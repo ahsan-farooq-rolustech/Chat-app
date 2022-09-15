@@ -12,4 +12,5 @@
     <string name="type_a_message">Type a message</string>
     <string name="proceed">Proceed</string>
     <string name="select_user">Select User</string>
+    <string name="inbox_is_empty">Inbox is empty</string>
 </resources>

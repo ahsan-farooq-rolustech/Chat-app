@@ -6,15 +6,9 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.annotation.GlideModule
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.utilities.glideModules.GlideApp
-import com.example.chatapplication.view.base.ActivityBase
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,7 +18,7 @@ val Context.glide: RequestManager?
 
 fun ImageView.load(path: String) {
     try {
-        val imageReference= ChatApplication.firebaseStorage.getReferenceFromUrl(path)
+        val imageReference = ChatApplication.firebaseStorage.getReferenceFromUrl(path)
         context.glide!!.load(imageReference).into(this)
     } catch (ex: Exception) {
         ex.printStackTrace()
@@ -38,10 +32,6 @@ fun Context.showToastMessage(message: String) {
 fun String.getBitmapFromEncodedString(): Bitmap? {
     val bytes = Base64.decode(this, Base64.DEFAULT)
     return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-}
-
-fun Date.getReadableFormat(): String {
-    return SimpleDateFormat("dd MMM,yyyy - hh:mm a", Locale.getDefault()).format(this)
 }
 
 fun Bitmap.encodeToString(): String? {
