@@ -35,13 +35,22 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         binding = FragmentInboxBinding.inflate(layoutInflater, container, false)
+        initThings()
+        firestoreHelper.getConversations(ChatApplication.fbAuth.currentUser?.email!!)
+        return binding.root
+    }
+
+    private fun initThings() {
         setHelpers()
         setListeners()
         getToken()
         setUserStatus()
         getConversations()
-        firestoreHelper.getConversations(ChatApplication.fbAuth.currentUser?.email!!)
-        return binding.root
+        getUserInfo()
+    }
+
+    private fun getUserInfo() {
+
     }
 
     private fun getConversations() {

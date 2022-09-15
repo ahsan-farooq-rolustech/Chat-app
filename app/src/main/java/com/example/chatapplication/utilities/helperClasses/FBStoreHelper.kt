@@ -270,13 +270,20 @@ class FBStoreHelper {
 
     fun getConversations(email: String) {
         val collectionReference = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS)
-        val task1 = collectionReference.whereEqualTo(FBConstants.KEY_USER1, email).get()
-        val task2 = collectionReference.whereEqualTo(FBConstants.KEY_USER2, email).get()
-        Tasks.whenAllSuccess<QuerySnapshot>(task1, task2).addOnSuccessListener { snapShotList ->
+        val searchUser1 = collectionReference.whereEqualTo(FBConstants.KEY_USER1, email).get()
+        val searchUser2 = collectionReference.whereEqualTo(FBConstants.KEY_USER2, email).get()
+        Tasks.whenAllSuccess<QuerySnapshot>(searchUser1, searchUser2).addOnSuccessListener { snapShotList ->
             val list = ArrayList<InboxResponseModel>()
             for (snapShots in snapShotList) {
                 for (document in snapShots) {
-                    val inboxModel = InboxResponseModel(user1Email = document.getString(FBConstants.KEY_USER1) ?: "", user2EMail = document.getString(FBConstants.KEY_USER2) ?: "")
+                    val inboxModel = InboxResponseModel(
+                        user1Email = document.getString(FBConstants.KEY_USER1) ?: "",
+                        user2EMail = document.getString(FBConstants.KEY_USER2) ?: "",
+                        senderName = document.getString(FBConstants.KEY_SENDER_NAME)?:"",
+                        receiverName = document.getString(FBConstants.KEY_RECEIVER_NAME)?:"",
+                        senderImageUrl = document.getString(FBConstants.KEY_SENDER_IMAGE)?:"",
+                        receiverImageUrl = document.getString(FBConstants.KEY_RECEIVER_IMAGE)?:""
+                    )
                     list.add(inboxModel)
                 }
             }
@@ -287,21 +294,21 @@ class FBStoreHelper {
     }
 
 
-    //    fun getUserProfile() {
-    //        val docRef = FirebaseApp.fbStore.collection(FBConstants.TABLE_USERS).document(FirebaseApp.fbAuth.currentUser!!.uid)
-    //        val user = UserResponseModel()
-    //        user.id = FirebaseApp.fbAuth.currentUser!!.uid
-    //
-    //        /*docRef.get().addOnSuccessListener{
-    //        }*/ //for getting the simple values of table
-    //
-    //        //if you want to get the realTimeChange
-    //        docRef.addSnapshotListener { value, error ->
-    //            user.firstName = value!!.get(FBConstants.COL_FIRST_NAME).toString()
-    //            user.lastName = value!!.get(FBConstants.COL_LAST_NAME).toString()
-    //            user.phoneNumber = value!!.get(FBConstants.COL_PHONE).toString()
-    //            user.email = value!!.get(FBConstants.COL_EMAIL).toString()
-    //            mListener.getUserProfile(user)
-    //        }
-    //    }
+//        fun getUserProfile() {
+//            val docRef = FirebaseApp.fbStore.collection(FBConstants.TABLE_USERS).document(FirebaseApp.fbAuth.currentUser!!.uid)
+//            val user = UserResponseModel()
+//            user.id = FirebaseApp.fbAuth.currentUser!!.uid
+//
+//            /*docRef.get().addOnSuccessListener{
+//            }*/ //for getting the simple values of table
+//
+//            //if you want to get the realTimeChange
+//            docRef.addSnapshotListener { value, error ->
+//                user.firstName = value!!.get(FBConstants.COL_FIRST_NAME).toString()
+//                user.lastName = value!!.get(FBConstants.COL_LAST_NAME).toString()
+//                user.phoneNumber = value!!.get(FBConstants.COL_PHONE).toString()
+//                user.email = value!!.get(FBConstants.COL_EMAIL).toString()
+//                mListener.getUserProfile(user)
+//            }
+//        }
 }
