@@ -10,12 +10,12 @@ import com.example.chatapplication.utilities.utils.DateUtil.getMinutesAgoLogicDa
 import com.example.chatapplication.utilities.utils.FBConstants
 import com.example.chatapplication.utilities.utils.IFirestoreListener
 import com.example.chatapplication.utilities.utils.UserPrefConstants
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import java.util.*
-import kotlin.collections.ArrayList
 
 class FBStoreHelper {
 
@@ -229,23 +229,68 @@ class FBStoreHelper {
         }
     }
 
-    private fun getLastMessageOfEachChat(list: ArrayList<InboxResponseModel>) {
-        for (i in 0 until list.size) {
-            val chatRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document(list[i].conversationId).collection(FBConstants.KEY_COLLECTION_CHAT).orderBy(FBConstants.KEY_TIMESTAMP, Query.Direction.DESCENDING).limit(1)
-            chatRef.get().addOnSuccessListener { chatRes ->
-                if (chatRes.documents.size > 0) {
-                    list[i].lastMsg = chatRes.documents[0].get(FBConstants.KEY_MESSAGE).toString()
-                    list[i].lastMsgTime = chatRes.documents[0].getDate(FBConstants.KEY_TIMESTAMP)?.getMinutesAgoLogicDate()!!
-                }
+//        private fun getLastMessageOfEachChat(list: ArrayList<InboxResponseModel>) {
+//
+//            val listConversationId=list.map { it.conversationId }
+//            for (i in 0 until list.size) {
+//                ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).whereIn(FieldPath.documentId(),)
+//                val chatRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document(list[i].conversationId).collection(FBConstants.KEY_COLLECTION_CHAT).orderBy(FBConstants.KEY_TIMESTAMP, Query.Direction.DESCENDING).limit(1)
+//                chatRef.get().addOnSuccessListener { chatRes ->
+//                    if (chatRes.documents.size > 0) {
+//                        if (chatRes.documents[0].get(FBConstants.KEY_MESSAGE).toString().isNotEmpty()) {
+//                            list[i].lastMsg = chatRes.documents[0].get(FBConstants.KEY_MESSAGE).toString()
+//                            list[i].lastMsgTime = chatRes.documents[0].getDate(FBConstants.KEY_TIMESTAMP)?.getMinutesAgoLogicDate()!!
+//                        }
+//                    }
+//
+//                    if (i + 1 == totalConversations) {
+//                        mListener.onGetUserInboxSuccessful(list)
+//                    }
+//                }.addOnFailureListener { error ->
+//                    mListener.onGetUserInboxFailure(error.toString())
+//                }
+//            }
+//
+//
+//        }
 
-                if (i + 1 == totalConversations) {
-                    mListener.onGetUserInboxSuccessful(list)
-                }
-            }.addOnFailureListener { error ->
-                mListener.onGetUserInboxFailure(error.toString())
-            }
+    private fun getLastMessageOfEachChat(list: ArrayList<InboxResponseModel>) {
+        val queryList = mutableListOf<Task<QuerySnapshot>>()
+        for (i in 0 until list.size) {
+            val chatRef = ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document(list[i].conversationId).collection(FBConstants.KEY_COLLECTION_CHAT).orderBy(FBConstants.KEY_TIMESTAMP, Query.Direction.DESCENDING).limit(1).get()
+            queryList.add(chatRef)
         }
 
+        Tasks.whenAllSuccess<QuerySnapshot>(queryList).addOnSuccessListener { querySnapShotList ->
+            for (querySnapShots in querySnapShotList) {
+                Log.d("getLastMessageOfEachChat", "id of the documents ${querySnapShots.documents[0].id}")
+                Log.d("getLastMessageOfEachChat", "parent of the documents ${querySnapShots.documents[0].reference.parent.parent?.id}")
+                Log.d("getLastMessageOfEachChat", "Message= ${querySnapShots.documents[0].getString(FBConstants.KEY_MESSAGE)}")
+                Log.d("getLastMessageOfEachChat", "time stamp= ${querySnapShots.documents[0].getDate(FBConstants.KEY_TIMESTAMP)}")
+                val conversationId=querySnapShots.documents[0].reference.parent.parent?.id?:""
+                val lastMessage=querySnapShots.documents[0].getString(FBConstants.KEY_MESSAGE)?:""
+                val lastMessageTimeStamp=querySnapShots.documents[0].getDate(FBConstants.KEY_TIMESTAMP)?.getMinutesAgoLogicDate()!!
+                val lastMessageDateObj=querySnapShots.documents[0].getDate(FBConstants.KEY_TIMESTAMP)
+                putLastMessageInConversation(list,conversationId,lastMessage,lastMessageTimeStamp,lastMessageDateObj)
+            }
 
+            mListener.onGetUserInboxSuccessful(list)
+        }.addOnFailureListener{error->
+            mListener.onGetUserInboxFailure(error.toString())
+        }
+    }
+
+    private fun putLastMessageInConversation(list: ArrayList<InboxResponseModel>, conversationId: String, lastMessage: String, lastMessageTimeStamp: String, lastMessageDateObj: Date?)
+    {
+        for (i in 0 until list.size)
+        {
+            if(list[i].conversationId==conversationId)
+            {
+                list[i].lastMsg=lastMessage
+                list[i].lastMsgTime=lastMessageTimeStamp
+                list[i].lastMessageDateObj=lastMessageDateObj
+                break
+            }
+        }
     }
 }

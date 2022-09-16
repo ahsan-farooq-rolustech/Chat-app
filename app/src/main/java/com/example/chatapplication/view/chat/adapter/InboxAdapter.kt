@@ -22,7 +22,6 @@ class InboxAdapter(private val conversationList: ArrayList<InboxResponseModel>) 
 
     override fun onBindViewHolder(holder: ConversationViewHolder, position: Int) {
         holder.binding.model = conversationList[position]
-        holder.binding.executePendingBindings()
         holder.binding.root.setOnClickListener {
             mListener.onClickConversation(position)
         }

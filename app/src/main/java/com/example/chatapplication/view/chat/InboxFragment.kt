@@ -2,6 +2,7 @@ package com.example.chatapplication.view.chat
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +44,7 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
         fsHelper.setStatus(AppConstants.STATUS_ACTIVE)
         fsHelper.getConversations(ChatApplication.fbAuth.currentUser?.email!!)
         setAdapter()
+        deleteChatsWithHi()
     }
 
     private fun setListeners() {
@@ -77,10 +79,13 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
 
     override fun onGetUserInboxSuccessful(list: ArrayList<InboxResponseModel>) {
         binding.isLoading = false
-        if (list.size > 0) {
+        if (list.isNotEmpty()) {
             binding.isInboxEmpty = false
             mList.clear()
             mList.addAll(list.filter { it.lastMsg.isNotEmpty() })
+            mList.sortByDescending {
+                it.lastMessageDateObj
+            }
             adapter.notifyItemRangeChanged(0, mList.size - 1)
         } else {
             binding.isInboxEmpty = true
@@ -94,4 +99,34 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
     override fun onClickConversation(position: Int) {
 
     }
+
+    private fun deleteChatsCollection()
+    {
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document().collection(FBConstants.KEY_COLLECTION_CHAT).document().delete().addOnSuccessListener {
+            Log.d("deleteChatsCollection","deleteSuccess")
+        }.addOnFailureListener {
+            Log.d("deleteChatsCollection","$it")
+        }
+    }
+
+    private fun deleteChatsWithHi()
+    {
+        val chatCollection=ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document("eBLYMsr0sbGTL84iz9fB").collection(FBConstants.KEY_COLLECTION_CHAT)
+        chatCollection.whereEqualTo(FBConstants.KEY_MESSAGE,"hi").get().addOnCompleteListener { task->
+            if(task.isSuccessful)
+            {
+                for(documentSnapShot in task.result)
+                {
+                    Log.d("deleteChatsWithHi",documentSnapShot.id)
+                    chatCollection.document(documentSnapShot.id).delete()
+                }
+                Log.d("deleteChatsWithHi","empty result")
+            }
+            else
+            {
+                Log.d("deleteChatsWithHi",task.exception.toString())
+            }
+        }
+    }
+
 }
