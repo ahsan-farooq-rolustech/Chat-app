@@ -24,6 +24,10 @@ object FBConstants {
     const val KEY_USER_1_IMAGE = "user1_image_url"
     const val KEY_USER_2_IMAGE = "user2_image_url"
     const val KEY_LAST_MESSAGE = "lastMessage"
+
+    const val KEY_COLLECTION_USER_ACTIVITY = "user_activities"
+    const val KEY_IS_USER_TYPING = "is_user_typing"
+
 }
 
 object AppAlerts {
