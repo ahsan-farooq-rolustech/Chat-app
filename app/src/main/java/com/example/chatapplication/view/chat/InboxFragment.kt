@@ -2,15 +2,18 @@ package com.example.chatapplication.view.chat
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.R
 import com.example.chatapplication.data.responseModel.InboxResponseModel
+import com.example.chatapplication.data.responseModel.UserResponseModel
 import com.example.chatapplication.databinding.FragmentInboxBinding
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
 import com.example.chatapplication.utilities.utils.*
@@ -44,7 +47,9 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
         fsHelper.setStatus(AppConstants.STATUS_ACTIVE)
         fsHelper.getConversations(ChatApplication.fbAuth.currentUser?.email!!)
         setAdapter()
-        deleteChatsWithHi()
+        //deleteChatsWithHi()
+        val itemTouchHelper=ItemTouchHelper(swipeCallback)
+        itemTouchHelper.attachToRecyclerView(binding.rvInbox)
     }
 
     private fun setListeners() {
@@ -97,36 +102,72 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
     }
 
     override fun onClickConversation(position: Int) {
-
-    }
-
-    private fun deleteChatsCollection()
-    {
-        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document().collection(FBConstants.KEY_COLLECTION_CHAT).document().delete().addOnSuccessListener {
-            Log.d("deleteChatsCollection","deleteSuccess")
-        }.addOnFailureListener {
-            Log.d("deleteChatsCollection","$it")
-        }
-    }
-
-    private fun deleteChatsWithHi()
-    {
-        val chatCollection=ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document("eBLYMsr0sbGTL84iz9fB").collection(FBConstants.KEY_COLLECTION_CHAT)
-        chatCollection.whereEqualTo(FBConstants.KEY_MESSAGE,"hi").get().addOnCompleteListener { task->
-            if(task.isSuccessful)
+        val inbox = mList[position]
+        val userEmail=ChatApplication.db.getString(UserPrefConstants.EMAIL)
+        if(userEmail!=null)
+        {
+            val user=if(inbox.user1Email==userEmail)
             {
-                for(documentSnapShot in task.result)
-                {
-                    Log.d("deleteChatsWithHi",documentSnapShot.id)
-                    chatCollection.document(documentSnapShot.id).delete()
-                }
-                Log.d("deleteChatsWithHi","empty result")
+                UserResponseModel(name = inbox.user2Name, email = inbox.user2EMail, image = inbox.user2ImageUrl, id = inbox.user2EMail)
             }
             else
             {
-                Log.d("deleteChatsWithHi",task.exception.toString())
+                UserResponseModel(name = inbox.user1Name, email = inbox.user1Email, image = inbox.user1ImageUrl, id = inbox.user1Email)
             }
+            val action=InboxFragmentDirections.actionInboxFragmentToChatFragment(user)
+            findNavController().navigate(action)
         }
     }
+
+    private val swipeCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+            var position=viewHolder.adapterPosition
+            when(direction)
+            {
+                ItemTouchHelper.LEFT->{
+
+                }
+                ItemTouchHelper.RIGHT->{
+
+                }
+
+            }
+
+        }
+    }
+
+//    private fun deleteChatsCollection()
+//    {
+//        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document().collection(FBConstants.KEY_COLLECTION_CHAT).document().delete().addOnSuccessListener {
+//            Log.d("deleteChatsCollection","deleteSuccess")
+//        }.addOnFailureListener {
+//            Log.d("deleteChatsCollection","$it")
+//        }
+//    }
+//
+//    private fun deleteChatsWithHi()
+//    {
+//        val chatCollection=ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document("eBLYMsr0sbGTL84iz9fB").collection(FBConstants.KEY_COLLECTION_CHAT)
+//        chatCollection.whereEqualTo(FBConstants.KEY_MESSAGE,"hi").get().addOnCompleteListener { task->
+//            if(task.isSuccessful)
+//            {
+//                for(documentSnapShot in task.result)
+//                {
+//                    Log.d("deleteChatsWithHi",documentSnapShot.id)
+//                    chatCollection.document(documentSnapShot.id).delete()
+//                }
+//                Log.d("deleteChatsWithHi","empty result")
+//            }
+//            else
+//            {
+//                Log.d("deleteChatsWithHi",task.exception.toString())
+//            }
+//        }
+//    }
 
 }
