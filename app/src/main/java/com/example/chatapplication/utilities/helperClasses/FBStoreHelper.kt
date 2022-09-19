@@ -293,4 +293,28 @@ class FBStoreHelper {
             }
         }
     }
+
+    fun performUserActivities(isUserTyping: Boolean) {
+        val data = HashMap<String, Any>()
+        data[FBConstants.KEY_IS_USER_TYPING] = isUserTyping
+        val userEmail = ChatApplication.db.getString(UserPrefConstants.EMAIL)!!
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USER_ACTIVITY).document(userEmail).set(data).addOnSuccessListener { document ->
+
+        }
+    }
+
+    fun getUserActivity(userEmail: String) {
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_USER_ACTIVITY).document(userEmail).addSnapshotListener { value, error ->
+            if (value!!.exists()) {
+                val isUserTyping = value.data!![FBConstants.KEY_IS_USER_TYPING].toString().toBoolean()
+                mListener.onUserTyping(isUserTyping)
+            }
+        }
+    }
+
+    fun deleteConversation(conversationId: String) {
+        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document(conversationId).delete().addOnSuccessListener {
+            mListener.onConversationDeletedSuccess()
+        }
+    }
 }

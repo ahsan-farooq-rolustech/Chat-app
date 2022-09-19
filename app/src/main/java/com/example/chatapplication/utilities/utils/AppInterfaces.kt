@@ -28,6 +28,8 @@ interface IFirestoreListener {
     fun onUserImageUploadProgress(progress: Int) {}
     fun onGetUserInboxSuccessful(list: ArrayList<InboxResponseModel>) {}
     fun onGetUserInboxFailure(error: String) {}
+    fun onUserTyping(isUserTyping: Boolean) {}
+    fun onConversationDeletedSuccess(){}
 }
 
 interface IInboxListener {
@@ -36,5 +38,15 @@ interface IInboxListener {
 
 interface IUserListener {
     fun onUserClicked(userResponseModel: UserResponseModel) {}
+}
+
+interface IBottomSheetListeners {
+    fun onClickArchiveChat() {}
+    fun onClickDeleteChat() {}
+}
+
+interface IDialogListeners {
+    fun onClickPositiveButton() {}
+    fun onClickNegativeButton() {}
 }
 
