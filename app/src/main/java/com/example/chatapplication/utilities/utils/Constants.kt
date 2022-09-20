@@ -31,6 +31,7 @@ object FBConstants {
 }
 
 object AppAlerts {
+    const val CONVERSATION_DELETE_SUCCESS="Conversation Deleted Successfully."
     const val GET_INBOX_FAILURE = "Error in getting chats"
     const val EMPTY_MESSAGE = "Empty message"
     const val NO_USER_AVAILABLE = "No users available"

@@ -154,7 +154,7 @@ class MessagesFragment : Fragment(), View.OnClickListener, IFirestoreListener, T
 
     override fun onConversationDeletedSuccess() {
         binding.isLoading = false
-        ActivityBase.activity.showToastMessage("Conversation Deleted Successfully.")
+        ActivityBase.activity.showToastMessage(AppAlerts.CONVERSATION_DELETE_SUCCESS)
         onBackPressed()
     }
 }
