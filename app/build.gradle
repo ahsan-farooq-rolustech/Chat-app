@@ -102,4 +102,5 @@ dependencies {
     //recycler view swipe decorator
     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
 
+
 }

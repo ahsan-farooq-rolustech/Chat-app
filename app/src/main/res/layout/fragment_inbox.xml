@@ -108,8 +108,7 @@
                 android:orientation="vertical"
                 android:overScrollMode="never"
                 android:paddingTop="@dimen/_10sdp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:visibleGone="@{!isLoading}" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <ProgressBar
                 android:id="@+id/pbLoader"

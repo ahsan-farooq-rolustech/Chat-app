@@ -34,6 +34,7 @@ interface IFirestoreListener {
 
 interface IInboxListener {
     fun onClickConversation(position: Int)
+    fun onClickDeleteConversation(position: Int)
 }
 
 interface IUserListener {

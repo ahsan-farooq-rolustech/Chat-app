@@ -1,30 +1,24 @@
 package com.example.chatapplication.view.chat
 
 import android.content.Intent
-import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapplication.ChatApplication
 import com.example.chatapplication.R
 import com.example.chatapplication.data.responseModel.DialogItems
 import com.example.chatapplication.data.responseModel.InboxResponseModel
 import com.example.chatapplication.data.responseModel.UserResponseModel
 import com.example.chatapplication.databinding.FragmentInboxBinding
-import com.example.chatapplication.utilities.bottomsheets.BottomSheetDeleteConversation
 import com.example.chatapplication.utilities.helperClasses.FBStoreHelper
 import com.example.chatapplication.utilities.utils.*
 import com.example.chatapplication.view.authentication.AuthActivity
 import com.example.chatapplication.view.base.ActivityBase
 import com.example.chatapplication.view.chat.adapter.InboxAdapter
-import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
 class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnClickListener, IInboxListener, IBottomSheetListeners, IDialogListeners {
@@ -33,7 +27,7 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
     private lateinit var fsHelper: FBStoreHelper
     private var mList = ArrayList<InboxResponseModel>()
     private lateinit var adapter: InboxAdapter
-    private lateinit var conversationIdToBeDeleted: String
+    private var id: String = ""
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,9 +46,7 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
         fsHelper.setListener(this)
         fsHelper.setStatus(AppConstants.STATUS_ACTIVE)
         fsHelper.getConversations(ChatApplication.fbAuth.currentUser?.email!!)
-        setAdapter() //deleteChatsWithHi()
-        val itemTouchHelper = ItemTouchHelper(swipeCallback)
-        itemTouchHelper.attachToRecyclerView(binding.rvInbox)
+        setAdapter()
     }
 
     private fun setListeners() {
@@ -120,92 +112,28 @@ class InboxFragment : Fragment(), IFBAuthListener, IFirestoreListener, View.OnCl
         }
     }
 
-    private val swipeCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            return false
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
-            var position = viewHolder.adapterPosition
-            when (direction) {
-                ItemTouchHelper.LEFT -> {
-                    deleteChat(mList[position].conversationId)
-                }
-                ItemTouchHelper.RIGHT -> {
-
-                }
-
-            }
-
-        }
-
-        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-
-            RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive).addSwipeLeftBackgroundColor(ContextCompat.getColor(ActivityBase.activity, R.color.error)).addSwipeLeftActionIcon(R.drawable.ic_delete).addSwipeRightBackgroundColor(ContextCompat.getColor(ActivityBase.activity, R.color.green)).addSwipeRightActionIcon(R.drawable.ic_archive).create().decorate()
-
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-        }
+    override fun onClickDeleteConversation(position: Int) {
+        deleteChat(mList[position].conversationId)
     }
+
 
     private fun deleteChat(conversationId: String) {
-        conversationIdToBeDeleted = conversationId
-        showDeleteConformationDialog()
-    }
-
-    private fun showDeleteConformationDialog() {
-        val bottomSheetDeleteConformation = BottomSheetDeleteConversation(ActivityBase.activity)
-        if (!bottomSheetDeleteConformation.isAdded) {
-            bottomSheetDeleteConformation.show(ActivityBase.activity.supportFragmentManager, bottomSheetDeleteConformation.tag)
-        }
-        bottomSheetDeleteConformation.setListener(this)
-    }
-
-    override fun onClickDeleteChat() {
-        ActivityBase.activity.showConfirmationDialog(DialogItems(title = "", description = "Are you sure you want to delete this chat?", buttonPositive = "Yes", buttonNegative = "No"), this)
+        id = conversationId
+        ActivityBase.activity.showConfirmationDialog(DialogItems(title = "", description = AppAlerts.CHAT_DELETE_CONFORMATION, buttonPositive = "Yes", buttonNegative = "No"), this)
     }
 
     override fun onClickPositiveButton() {
-        if (this::conversationIdToBeDeleted.isInitialized) {
-            binding.isLoading = true
-            fsHelper.deleteConversation(conversationIdToBeDeleted)
-        }
+        binding.isLoading = true
+        fsHelper.deleteConversation(id)
     }
 
     override fun onConversationDeletedSuccess() {
+        binding.isLoading = false
         ActivityBase.activity.showToastMessage(AppAlerts.CONVERSATION_DELETE_SUCCESS)
-        fsHelper.getConversations(ChatApplication.fbAuth.currentUser?.email!!)
-
+        val index = mList.indexOf(mList.find { it.conversationId == id })
+        mList.removeAt(index)
+        adapter.notifyItemRemoved(index)
+        if (mList.size == 0) binding.isInboxEmpty = true
     }
-
-
-    //    private fun deleteChatsCollection()
-    //    {
-    //        ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document().collection(FBConstants.KEY_COLLECTION_CHAT).document().delete().addOnSuccessListener {
-    //            Log.d("deleteChatsCollection","deleteSuccess")
-    //        }.addOnFailureListener {
-    //            Log.d("deleteChatsCollection","$it")
-    //        }
-    //    }
-    //
-    //    private fun deleteChatsWithHi()
-    //    {
-    //        val chatCollection=ChatApplication.firestore.collection(FBConstants.KEY_COLLECTION_CONVERSATIONS).document("eBLYMsr0sbGTL84iz9fB").collection(FBConstants.KEY_COLLECTION_CHAT)
-    //        chatCollection.whereEqualTo(FBConstants.KEY_MESSAGE,"hi").get().addOnCompleteListener { task->
-    //            if(task.isSuccessful)
-    //            {
-    //                for(documentSnapShot in task.result)
-    //                {
-    //                    Log.d("deleteChatsWithHi",documentSnapShot.id)
-    //                    chatCollection.document(documentSnapShot.id).delete()
-    //                }
-    //                Log.d("deleteChatsWithHi","empty result")
-    //            }
-    //            else
-    //            {
-    //                Log.d("deleteChatsWithHi",task.exception.toString())
-    //            }
-    //        }
-    //    }
 
 }
